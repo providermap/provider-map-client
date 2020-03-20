@@ -3,7 +3,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: [ "./src/index.tsx" ],
+  entry: [ "@babel/polyfill", "./src/index.jsx" ],
 
   output: {
     filename: "bundle.js",
@@ -19,17 +19,14 @@ module.exports = {
   ],
 
   resolve: {
-    extensions: [ ".tsx", ".ts", ".js", "json" ],
+    extensions: [ ".jsx", ".js", ".json" ],
     modules: [ path.resolve(__dirname, "src/app"), "node_modules" ]
   },
 
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
-        use: [ "ts-loader" ]
-      },
-      { enforce: "pre", test: /\.(js|jsx)$/, exclude: /node_modules/, loader: "eslint-loader", options: { failOnError: true, failOnWarning: false } },
+      { enforce: "pre", test: /\.(js|jsx)$/, exclude: /node_modules/, loader: "eslint-loader", options: { emitError: true, emitWarning: false } },
+      { test: /\.(js|jsx)$/, exclude: /node_modules/, loader: "babel-loader" },
       { test: /\.(css|sass|scss)$/,
         use: [
           { loader: "style-loader" },
