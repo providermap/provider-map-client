@@ -1,0 +1,24 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# production
+/dist
+
+# test coverage
+/coverage
+
+# webpack cache
+/.cache
+
+# misc
+.DS_Store
+*.env*
+*.env-local
+*.env-local-docker
+*.env-development
+*.env-production
+server.log
+npm-debug.log*
+.vscode

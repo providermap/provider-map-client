@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext", // CommonJS destroys 'dynamic imports' which is used for code splitting
+    "noImplicitAny": false,
+    "preserveConstEnums": true,
+    "baseUrl": "./app",
+    "jsx": "react", // Process JSX
+    "lib": ["dom", "es5", "es6", "es7", "es2017"],
+    "allowSyntheticDefaultImports": true, // No errors with commonjs modules interop
+    "esModuleInterop": true,
+    "allowJs": true,
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "pretty": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "paths": {
+      "*": [
+        "*",
+        "src/app/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
