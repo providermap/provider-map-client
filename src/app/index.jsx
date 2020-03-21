@@ -4,7 +4,7 @@ import { createBrowserHistory } from "history";
 import { Router, Route, Redirect, Switch } from "react-router";
 
 // Components
-import { Layout } from "./ui-kit/containers";
+import { Div } from "./ui-kit/html";
 
 // Theme provider
 import Theme from "./ui-kit/theme";
@@ -27,14 +27,14 @@ const App = () => (
   <ErrorBoundary>
     <GlobalStyles />
       <Theme>
-        <Layout>
+        <Div width="100%">
           <Router history={history}>
             <Switch>
               <Route path="/facility" component={Facilities} />
               <Redirect to="/facility" />
             </Switch>
           </Router>
-        </Layout>
+        </Div>
     </Theme>
   </ErrorBoundary>
   // </Provider>

@@ -1,13 +1,17 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useCallback } from "react";
+import { useParams, useHistory } from "react-router-dom";
 
 // Components
 import Text from "@airbnb/lunar/lib/components/Text";
-import AppLoader from "@airbnb/lunar/lib/components/AppLoader"
-import { Layout } from "../../../ui-kit/containers";
+import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
+import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
+import Breadcrumbs, { Breadcrumb } from "@airbnb/lunar/lib/components/Breadcrumbs";
+import Grid, { Col } from "@airbnb/lunar/lib/components/Grid";
+import { Term } from "@airbnb/lunar/lib/components/TermList";
+import { Div, } from "../../../ui-kit/html";
 
 // Hooks
-import useRequestHandler from "../../utils/hooks";
+import useRequestHandler from "../../utils/hooks/useRequestHandler";
 
 
 const Facility = () => {
@@ -15,16 +19,73 @@ const Facility = () => {
   // Get route params
   const { providerId } = useParams();
 
+  // Get push from history
+  const { push } = useHistory();
+
+  // Function to send user back to facilities page
+  const pushToFacilities = useCallback(() => push(`/facility/all`), []);
+
   // Make API request via useRequestHandler hook
-  const [ isReady, data ] = useRequestHandler(`/api/facility/provider/${providerId}`);
+  const [ isReady, facility ] = useRequestHandler(`/api/facility/provider/${providerId}`);
 
   // Display app loader until component is ready
-  if (isReady) return <AppLoader/>;
+  if (!isReady) return <AppLoader/>;
+
+  // Facility data
+  const {
+    address,
+    bed_count,
+    city,
+    name,
+    size,
+    state,
+    telephone,
+    type,
+    zip
+  } = facility;
 
   return (
     <Layout>
-      <Text>Specific Facility</Text>
-      <Text>{ JSON.stringify(data) }</Text>
+      <Breadcrumbs accessibilityLabel="Breadcrumb">
+        <Breadcrumb label="Facilities" onClick={pushToFacilities} />
+        <Breadcrumb highlighted selected hideIcon label={name} />
+      </Breadcrumbs>
+
+
+      <Div paddingY="20px">
+        <Text>{ name }</Text>
+        <Text>{`${address}, ${city} ${state} ${zip}`}</Text>
+      </Div>
+
+      <Grid>
+        <Col span={4}>
+          <Term label="Telephone">{ telephone || "--"}</Term>
+        </Col>
+
+        <Col span={4}>
+          <Term label="Size">{ size }</Term>
+        </Col>
+
+        <Col span={4}>
+          <Term label="Available Facility">{ "TODO" }</Term>
+        </Col>
+      </Grid>
+
+      <Grid>
+        <Col span={4}>
+          <Term label="Treating COVID-19">{ "TODO" }</Term>
+        </Col>
+
+        <Col span={4}>
+          <Term label="Type">{ type }</Term>
+        </Col>
+
+        <Col span={4}>
+          <Term label="Last Updated">{ bed_count }</Term>
+        </Col>
+      </Grid>
+
+      <Div paddingTop="100px">{ JSON.stringify(facility) }</Div>
     </Layout>
   );
 }

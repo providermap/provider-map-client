@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import AirBnBLayout from '@airbnb/lunar-layouts/lib/components/Layout'
 
-const Layout = styled(AirBnBLayout)`
+const Flexbox = styled.div`
+  display: flex;
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
@@ -13,4 +13,4 @@ const Image = styled.img`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-export { Layout, Div, Image };
+export { Div, Image, Flexbox };

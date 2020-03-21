@@ -4,15 +4,16 @@ import { useHistory } from "react-router-dom" ;
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader"
-import Grid from "@airbnb/lunar/lib/components/Grid"
-import { Layout } from "../../../ui-kit/containers";
+// import Grid from "@airbnb/lunar/lib/components/Grid";
+import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
+import Aside from "@airbnb/lunar-layouts/lib/components/Aside";
+import { Div } from "../../../ui-kit/html";
 
 // Private components
 import FacilityCard from "./components/FacilityCard";
 
 // Hooks
-import useRequestHandler from "../../utils/hooks";
-
+import useRequestHandler from "../../utils/hooks/useRequestHandler";
 
 const AllFacilities = () => {
 
@@ -22,18 +23,29 @@ const AllFacilities = () => {
   // Make API request via useRequestHandler hook
   const [ isReady, facilities ] = useRequestHandler(`/api/facility/all`);
 
-  if (isReady) return <AppLoader/>;
+  // Show app loader until component is ready
+  if (!isReady) return <AppLoader/>;
+
+  const LeftAside = () => {
+    return (
+      <Aside
+        before
+        width={300}>
+        Filters will eventually go here :)
+      </Aside>
+    );
+  }
 
   return (
-    <Layout>
-      <Text>Facilities</Text>
-      <Text bold>{`(${facilities?.length})`}</Text>
+    <Layout before={<LeftAside />}>
+      <Div display="flex" alignItems="center" paddingBottom="20px">
+        <Text large>Facilities&nbsp;&nbsp;</Text>
+        <Text small>({facilities?.length})</Text>
+      </Div>
 
-      <Grid>
-        { facilities.slice(1,10).map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
-      </Grid>
+      {/* Map through facilities and display facility cards */}
+      { facilities.slice(1,10).map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
 
-      {/* { JSON.stringify(facilities) } */}
     </Layout>
   );
 }
