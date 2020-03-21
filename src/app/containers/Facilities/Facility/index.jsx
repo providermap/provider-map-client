@@ -18,6 +18,7 @@ const Facility = () => {
   // Make API request via useRequestHandler hook
   const [ isReady, data ] = useRequestHandler(`/api/facility/provider/${providerId}`);
 
+  // Display app loader until component is ready
   if (isReady) return <AppLoader/>;
 
   return (
