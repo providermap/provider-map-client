@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { Container as BootstrapContainer } from "styled-bootstrap-grid";
+import AirBnBLayout from '@airbnb/lunar-layouts/lib/components/Layout'
 
-const Container = styled(BootstrapContainer)`
+const Layout = styled(AirBnBLayout)`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
@@ -13,4 +13,4 @@ const Image = styled.img`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-export { Container, Div, Image };
+export { Layout, Div, Image };
