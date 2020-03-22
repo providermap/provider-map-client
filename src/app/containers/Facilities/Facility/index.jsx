@@ -6,9 +6,8 @@ import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
 import Breadcrumbs, { Breadcrumb } from "@airbnb/lunar/lib/components/Breadcrumbs";
-import Grid, { Col } from "@airbnb/lunar/lib/components/Grid";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
-import { Div, } from "../../../ui-kit/html";
+import { Div, Container, Row, Col } from "../../../ui-kit/html";
 
 // Hooks
 import useRequestHandler from "../../utils/hooks/useRequestHandler";
@@ -26,68 +25,67 @@ const Facility = () => {
   const pushToFacilities = useCallback(() => push(`/facility/all`), []);
 
   // Make API request via useRequestHandler hook
-  const [ isReady, facility ] = useRequestHandler(`/api/facility/provider/${providerId}`);
-
-  // Display app loader until component is ready
-  if (!isReady) return <AppLoader/>;
-
-  // Facility data
-  const {
-    address,
-    bed_count,
-    city,
-    last_update,
-    name,
-    state,
-    telephone,
-    treats_covid19,
-    type,
-    zip
-  } = facility;
+  const [ isReady, facility, error ] = useRequestHandler(`/api/facility/provider/${providerId}`);
 
   return (
-    <Layout>
-      <Breadcrumbs accessibilityLabel="Breadcrumb">
-        <Breadcrumb label="Facilities" onClick={pushToFacilities} />
-        <Breadcrumb highlighted selected hideIcon label={name} />
-      </Breadcrumbs>
+    <AppLoader
+      centered
+      error={error}
+      errorTitle="Please try again later. We apologize for the inconvenience."
+      fetched={isReady}
+      failureText="Failed to load facility."
+      loadingText="Loading facility.">
+
+      <Layout minHeight="360px" fluid>
+        <Container>
+          <Breadcrumbs accessibilityLabel="Breadcrumb">
+            <Breadcrumb label="Facilities" onClick={pushToFacilities} />
+            <Breadcrumb highlighted selected hideIcon label={facility?.name} />
+          </Breadcrumbs>
 
 
-      <Div paddingY="20px">
-        <Text>{ name }</Text>
-        <Text>{`${address}, ${city} ${state} ${zip}`}</Text>
-      </Div>
+          <Div paddingY="30px">
+            <Div fontSize="30px">{ facility?.name }</Div>
+            <Text muted>
+              {`${facility?.address}, ${facility?.city} ${facility?.state} ${facility?.zip}`}
+            </Text>
+          </Div>
 
-      <Grid>
-        <Col span={4}>
-          <Term label="Telephone">{ telephone || "--"}</Term>
-        </Col>
+          <Row>
+            <Col col={4}>
+              <Term label="Telephone">{ facility?.telephone ?? "--"}</Term>
+            </Col>
 
-        <Col span={4}>
-          <Term label="Beds">{ bed_count }</Term>
-        </Col>
+            <Col col={4}>
+              <Term label="Beds">{ facility?.bed_count }</Term>
+            </Col>
 
-        <Col span={4}>
-          <Term label="Staffed Beds">{bed_count }</Term>
-        </Col>
-      </Grid>
+            <Col col={4}>
+              <Term label="Staffed Beds">{ facility?.bed_count }</Term>
+            </Col>
+          </Row>
 
-      <Grid>
-        <Col span={4}>
-          <Term label="Treats COVID-19">{ treats_covid19 || "Unknown" }</Term>
-        </Col>
+          <Div paddingY="10px" />
 
-        <Col span={4}>
-          <Term label="Type">{ type }</Term>
-        </Col>
+          <Row>
+            <Col col={4}>
+              <Term label="Treats COVID-19">{ facility?.treats_covid19 ?? "Unknown" }</Term>
+            </Col>
 
-        <Col span={4}>
-          <Term label="Last Updated">{ last_update }</Term>
-        </Col>
-      </Grid>
+            <Col col={4}>
+              <Term label="Type">{ facility?.type }</Term>
+            </Col>
 
-      <Div paddingTop="100px">{ JSON.stringify(facility) }</Div>
-    </Layout>
+            <Col col={4}>
+              <Term label="Last Updated">{ facility?.last_update }</Term>
+            </Col>
+          </Row>
+        </Container>
+      </Layout>
+
+
+      <Container paddingTop="100px" overflowWrap="break-word">{ JSON.stringify(facility) }</Container>
+    </AppLoader>
   );
 }
 
