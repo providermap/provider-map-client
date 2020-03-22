@@ -6,7 +6,7 @@ Core.initialize({
   defaultLocale: "en",
   defaultTimezone: "UTC",
   // logger: logToSentry,
-  name: "AppName",
+  name: "ProviderMap",
 });
 
 // Application

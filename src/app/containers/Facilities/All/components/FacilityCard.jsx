@@ -7,6 +7,7 @@ import Divider from "@airbnb/lunar/lib/components/Divider";
 import Grid, { Col } from "@airbnb/lunar/lib/components/Grid";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
 import Spacing from "@airbnb/lunar/lib/components/Spacing";
+import Link from '@airbnb/lunar/lib/components/Link'
 import { Div, Flexbox } from "../../../../ui-kit/html";
 
 // Utils
@@ -14,7 +15,7 @@ import timeAgo from "../../../utils/timeAgo";
 
 const FacilityCard = ({ push, facility }) => {
 
-  // Facility data (Default some fields to "N/A")
+  // Facility data
   const {
     address,
     available_bed_count,
@@ -40,9 +41,9 @@ const FacilityCard = ({ push, facility }) => {
       <Card>
         <Content truncated onClick={pushToFacility} >
           <Flexbox justifyContent="center" flexDirection="column">
-            <Div paddingBottom="10px">
-              <Text>{ name }</Text>
-              <Text>{`${address}, ${city} ${state} ${zip}`}</Text>
+            <Div paddingBottom="16px">
+              <Text large>{ name }</Text>
+              <Text muted>{`${address}, ${city} ${state} ${zip}`}</Text>
             </Div>
 
             <Flexbox justifyContent="space-between" alignItems="center" flexDirection="row">
@@ -75,7 +76,8 @@ const FacilityCard = ({ push, facility }) => {
             </Col>
 
             <Col span={4}>
-              <Term label="Staffed Beds">{ "TODO" }</Term>
+              {/* TODO: Change to appropriate data field when available */}
+              <Term label="Staffed Beds">{ bed_count }</Term>
             </Col>
           </Grid>
 
@@ -83,7 +85,9 @@ const FacilityCard = ({ push, facility }) => {
 
           <Grid>
             <Col span={4}>
-              <Term label="Website">{ website }</Term>
+              <Term label="Website">
+                <Link href={website} onClick={(event) => event.stopPropagation()}>{website}</Link>
+              </Term>
             </Col>
 
             <Col span={4}>

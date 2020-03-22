@@ -21,10 +21,8 @@ const AllFacilities = () => {
   const { push } = useHistory();
 
   // Make API request via useRequestHandler hook
-  const [ isReady, facilities ] = useRequestHandler(`/api/facility/all`);
-
-  // Show app loader until component is ready
-  if (!isReady) return <AppLoader/>;
+  const [ isReady, facilities, error ] = useRequestHandler(`/api/facility/all`);
+  console.log("AllFacilities -> isReady", isReady)
 
   const LeftAside = () => {
     return (
@@ -37,16 +35,25 @@ const AllFacilities = () => {
   }
 
   return (
-    <Layout before={<LeftAside />}>
-      <Div display="flex" alignItems="center" paddingBottom="20px">
-        <Text large>Facilities&nbsp;&nbsp;</Text>
-        <Text small>({facilities?.length})</Text>
-      </Div>
+    <AppLoader
+      centered
+      error={error}
+      errorTitle="Please try again later. We apologize for the inconvenience."
+      fetched={isReady}
+      failureText="Failed to load facilities."
+      loadingText="Loading facilities.">
 
-      {/* Map through facilities and display facility cards */}
-      { facilities.slice(1,10).map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
+      <Layout before={<LeftAside />}>
+        <Div display="flex" alignItems="center" paddingBottom="20px">
+          <Text large>Facilities&nbsp;&nbsp;</Text>
+          <Text small>({facilities?.length})</Text>
+        </Div>
 
-    </Layout>
+        {/* Map through facilities and display facility cards */}
+        { facilities?.slice(1,10).map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
+
+      </Layout>
+    </AppLoader>
   );
 }
 

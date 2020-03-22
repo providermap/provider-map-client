@@ -36,10 +36,11 @@ const Facility = () => {
     address,
     bed_count,
     city,
+    last_update,
     name,
-    size,
     state,
     telephone,
+    treats_covid19,
     type,
     zip
   } = facility;
@@ -63,17 +64,17 @@ const Facility = () => {
         </Col>
 
         <Col span={4}>
-          <Term label="Size">{ size }</Term>
+          <Term label="Beds">{ bed_count }</Term>
         </Col>
 
         <Col span={4}>
-          <Term label="Available Facility">{ "TODO" }</Term>
+          <Term label="Staffed Beds">{bed_count }</Term>
         </Col>
       </Grid>
 
       <Grid>
         <Col span={4}>
-          <Term label="Treating COVID-19">{ "TODO" }</Term>
+          <Term label="Treats COVID-19">{ treats_covid19 || "Unknown" }</Term>
         </Col>
 
         <Col span={4}>
@@ -81,7 +82,7 @@ const Facility = () => {
         </Col>
 
         <Col span={4}>
-          <Term label="Last Updated">{ bed_count }</Term>
+          <Term label="Last Updated">{ last_update }</Term>
         </Col>
       </Grid>
 
