@@ -1,19 +1,23 @@
 import React from "react";
 // import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
-import { Router } from "react-router";
+import { Router, Route, Redirect, Switch } from "react-router";
+
+// Components
+import { Div } from "./ui-kit/html";
 
 // Theme provider
 import Theme from "./ui-kit/theme";
 import GlobalStyles from "./ui-kit/global-styles";
 
 // Containers
-import Home from "./containers/Home";
+import Facilities from "./containers/Facilities";
 import ErrorBoundary from "./containers/ErrorBoundary";
 
 // Store configurations
 // import { configureStore } from "./store";
 // const store = configureStore();
+
 
 // Prepare root router
 const history = createBrowserHistory();
@@ -23,10 +27,14 @@ const App = () => (
   <ErrorBoundary>
     <GlobalStyles />
       <Theme>
-        <Router history={history}>
-          <h1>Hey</h1>
-          <Home />
-        </Router>
+        <Div width="100%">
+          <Router history={history}>
+            <Switch>
+              <Route path="/facility" component={Facilities} />
+              <Redirect to="/facility" />
+            </Switch>
+          </Router>
+        </Div>
     </Theme>
   </ErrorBoundary>
   // </Provider>
