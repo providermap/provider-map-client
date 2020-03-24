@@ -13,6 +13,7 @@ import GlobalStyles from "./ui-kit/global-styles";
 // Containers
 import Facilities from "./containers/Facilities";
 import ErrorBoundary from "./containers/ErrorBoundary";
+import FirebaseFacilities from "./containers/FirebaseFacilities";
 
 // Store configurations
 // import { configureStore } from "./store";
@@ -31,6 +32,7 @@ const App = () => (
           <Router history={history}>
             <Switch>
               <Route path="/facility" component={Facilities} />
+              <Route path="/firebase-facility" component={FirebaseFacilities} />
               <Redirect to="/facility" />
             </Switch>
           </Router>

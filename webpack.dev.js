@@ -24,7 +24,7 @@ module.exports = merge(commonWebpackConfig, {
   // Define dev server config
   devServer: {
     compress: true,
-    contentBase: "./dist",
+    contentBase: "./public",
     // Fall back browser history api
     historyApiFallback: true,
     // Enable hot reloading

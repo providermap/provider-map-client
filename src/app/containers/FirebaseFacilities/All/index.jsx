@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom" ;
 
 // Public components
@@ -12,8 +12,8 @@ import { Div } from "../../../ui-kit/html";
 // Private components
 import FacilityCard from "./components/FacilityCard";
 
-// Hooks
-import useRequestHandler from "../../utils/hooks/useRequestHandler";
+// Firestore DB
+import { db } from "../../../../firebase";
 
 // Left aside
 const LeftAside = () => (
@@ -27,8 +27,23 @@ const AllFacilities = () => {
   // Get history from react-router
   const { push } = useHistory();
 
-  // Make API request via useRequestHandler hook
-  const [ isReady, facilities, error ] = useRequestHandler(`/api/facility/all`);
+  const [ isReady, setIsReady ] = useState(false);
+  const [ facilities, setFacilities ] = useState([]);
+  const [ error, setError ] = useState(null);
+
+  const fetchFacilities = async () => {
+    try {
+      const data = await db.collection("Facility").get();
+      console.log("fetchFacilities -> data", data)
+      setFacilities(data.docs.map((doc => doc.data())));
+      setIsReady(true);
+    } catch (error) {
+      setError(error);
+    }
+  }
+
+  useEffect(() => void fetchFacilities(), []);
+
 
   return (
     <AppLoader

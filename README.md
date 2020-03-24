@@ -13,13 +13,13 @@ You will also see any lint errors in the console.
 
 ### `npm run build`
 
-Builds the app in development mode to the `dist` folder.<br />
+Builds the app in development mode to the `public` folder.<br />
 It correctly bundles React with the development webpack with source-maps. Dev-friendly bundle :)
 
 
 ### `npm run build-prod`
 
-Builds the app in production mode to the `dist` folder.<br />
+Builds the app in production mode to the `public` folder.<br />
 It correctly bundles React with the production webpack and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br />
