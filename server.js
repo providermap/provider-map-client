@@ -12,7 +12,7 @@ app.use(express.static("./public"));
 app.use(bodyParser.json());
 
 // Serve static react site
-app.get("*", (req, res) => void res.sendFile(path.join(__dirname, "./public", "index.html")));
+app.get("*", (_req, res) => void res.sendFile(path.join(__dirname, "./public", "index.html")));
 
 // Serve that ish
 const port = process.env.PORT || 80;

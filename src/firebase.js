@@ -4,14 +4,14 @@ import "firebase/analytics";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAqDXqMT_fCnbmDKpj4CgCal3UBrjR_OaQ",
-  authDomain: "provider-map-website.firebaseapp.com",
-  databaseURL: "https://provider-map-website.firebaseio.com",
-  projectId: "provider-map-website",
-  storageBucket: "provider-map-website.appspot.com",
-  messagingSenderId: "515646226921",
-  appId: "1:515646226921:web:af04162e200c48c6b18b78",
-  measurementId: "G-KD4PZ97Y1S"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DB_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
