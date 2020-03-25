@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 
 // Components
@@ -7,10 +7,11 @@ import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
 import Breadcrumbs, { Breadcrumb } from "@airbnb/lunar/lib/components/Breadcrumbs";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
+import Link from "@airbnb/lunar/lib/components/Link";
 import { Div, Container, Row, Col } from "../../../ui-kit/html";
 
-// Hooks
-import useRequestHandler from "../../utils/hooks/useRequestHandler";
+// Firestore DB
+import { db } from "../../../../firebase";
 
 
 const Facility = () => {
@@ -24,8 +25,24 @@ const Facility = () => {
   // Function to send user back to facilities page
   const pushToFacilities = useCallback(() => push(`/facility/all`), []);
 
-  // Make API request via useRequestHandler hook
-  const [ isReady, facility, error ] = useRequestHandler(`/api/facility/provider/${providerId}`);
+  const [ isReady, setIsReady ] = useState(false);
+  const [ facility, setFacility ] = useState([]);
+  const [ error, setError ] = useState(null);
+  console.log("Facility -> facility", facility)
+
+  const fetchFacility = async () => {
+    try {
+      const data = await db.collection("facilities_dev").where("provider_id", "==", Number(providerId)).get();
+
+      // We want the first facility from the query (TODO: Figure out a clean way to do this)
+      setFacility(data.docs.map((doc => doc.data()))[0]);
+      setIsReady(true);
+    } catch (error) {
+      setError(error);
+    }
+  }
+
+  useEffect(() => void fetchFacility(), []);
 
   return (
     <AppLoader
@@ -40,7 +57,7 @@ const Facility = () => {
         <Container>
           <Breadcrumbs accessibilityLabel="Breadcrumb">
             <Breadcrumb label="Facilities" onClick={pushToFacilities} />
-            <Breadcrumb highlighted selected hideIcon label={facility?.name} />
+            <Breadcrumb highlighted selected hideIcon label={facility?.name ?? "Placeholder"} />
           </Breadcrumbs>
 
 
@@ -53,15 +70,15 @@ const Facility = () => {
 
           <Row>
             <Col col={4}>
-              <Term label="Telephone">{ facility?.telephone ?? "--"}</Term>
+              <Term label="Telephone">{ facility?.telephone || "--"}</Term>
             </Col>
 
             <Col col={4}>
-              <Term label="Beds">{ facility?.bed_count }</Term>
+              <Term label="Beds">{ facility?.total_bed_count || "--" }</Term>
             </Col>
 
             <Col col={4}>
-              <Term label="Staffed Beds">{ facility?.bed_count }</Term>
+              <Term label="ICU Beds">{ facility?.icu_bed_count || "--" }</Term>
             </Col>
           </Row>
 
@@ -69,7 +86,7 @@ const Facility = () => {
 
           <Row>
             <Col col={4}>
-              <Term label="Treats COVID-19">{ facility?.treats_covid19 ?? "Unknown" }</Term>
+              <Term label="Treats COVID-19">{ facility?.treats_covid19 || "Unknown" }</Term>
             </Col>
 
             <Col col={4}>
@@ -77,14 +94,17 @@ const Facility = () => {
             </Col>
 
             <Col col={4}>
-              <Term label="Last Updated">{ facility?.last_update }</Term>
+              <Term label="Last Updated">{ facility?.last_updated || "--" }</Term>
             </Col>
           </Row>
         </Container>
       </Layout>
 
 
-      <Container paddingTop="100px" overflowWrap="break-word">{ JSON.stringify(facility) }</Container>
+      <Container paddingTop="100px" overflowWrap="break-word">
+        {/* { JSON.stringify(facility) } */}
+        <Text>More information to come. Please reach out to <Link mailto="info@providermap.org">info@providermap.org</Link>.</Text>
+      </Container>
     </AppLoader>
   );
 }

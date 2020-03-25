@@ -5,6 +5,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import AllFacilities from "./All";
 import Facility from "./Facility";
 
+
 const Facilities = ({ match: { url }}) => (
   <Switch>
     <Route path={`${url}/all`} component={AllFacilities} />

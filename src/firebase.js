@@ -4,14 +4,14 @@ import "firebase/analytics";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBAD0VZwaFtj5KGiR86cxo3ijEKW98sqSM",
-  authDomain: "provider-map-fdf85.firebaseapp.com",
-  databaseURL: "https://provider-map-fdf85.firebaseio.com",
-  projectId: "provider-map-fdf85",
-  storageBucket: "provider-map-fdf85.appspot.com",
-  messagingSenderId: "133501023006",
-  appId: "1:133501023006:web:4c728867dade16aa9a8f0f",
-  measurementId: "G-0VPN9J90H2"
+  apiKey: "AIzaSyAqDXqMT_fCnbmDKpj4CgCal3UBrjR_OaQ",
+  authDomain: "provider-map-website.firebaseapp.com",
+  databaseURL: "https://provider-map-website.firebaseio.com",
+  projectId: "provider-map-website",
+  storageBucket: "provider-map-website.appspot.com",
+  messagingSenderId: "515646226921",
+  appId: "1:515646226921:web:af04162e200c48c6b18b78",
+  measurementId: "G-KD4PZ97Y1S"
 };
 
 // Initialize Firebase

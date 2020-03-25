@@ -18,15 +18,17 @@ const FacilityCard = ({ push, facility }) => {
   const {
     address,
     available_bed_count,
-    bed_count,
     city,
-    last_update,
+    last_updated,
+    licensed_bed_count,
     name,
     provider_id,
+    state,
     telephone,
+    total_bed_count,
     trauma,
     type,
-    state,
+    ventilator_count,
     verified,
     website,
     zip
@@ -48,7 +50,7 @@ const FacilityCard = ({ push, facility }) => {
             <Flexbox flexDirection="column">
               <Div display="inline-flex">
                 <Text preserveWhitespace>Beds Available: </Text>
-                <Text muted>{ available_bed_count || "Data Needed"}</Text>
+                <Text muted>{ available_bed_count || "Data Needed" }</Text>
               </Div>
 
               { /* TODO: Add 'Verify Now' link for false case */ }
@@ -56,7 +58,7 @@ const FacilityCard = ({ push, facility }) => {
             </Flexbox>
 
             <Div>
-              <Text muted>{`Last Updated: ${timeAgo(last_update)}`}</Text>
+              <Text muted>{`Last Updated: ${timeAgo(last_updated)}`}</Text>
             </Div>
           </Flexbox>
         </Flexbox>
@@ -69,12 +71,11 @@ const FacilityCard = ({ push, facility }) => {
           </Col>
 
           <Col col={4}>
-            <Term label="Beds">{ bed_count }</Term>
+            <Term label="Beds">{ total_bed_count || licensed_bed_count || "--" }</Term>
           </Col>
 
           <Col col={4}>
-            {/* TODO: Change to appropriate data field when available */}
-            <Term label="Staffed Beds">{ bed_count }</Term>
+            <Term label="Ventilator Count">{ ventilator_count || "--" }</Term>
           </Col>
         </Row>
 
