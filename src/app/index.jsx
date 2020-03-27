@@ -4,7 +4,7 @@ import { createBrowserHistory } from "history";
 import { Router, Route, Redirect, Switch } from "react-router";
 
 // Components
-import { Div } from "./ui-kit/html";
+import { Div } from "./ui-kit/components";
 
 // Theme provider
 import Theme from "./ui-kit/theme";

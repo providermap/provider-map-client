@@ -3,7 +3,7 @@ import React, { memo } from "react";
 // UI Components
 import Aside from "@airbnb/lunar-layouts/lib/components/Aside";
 import Text from "@airbnb/lunar/lib/components/Text";
-import { Div, Image, Flexbox } from "../../../../ui-kit/html";
+import { Div, Image, Flexbox } from "../../../../ui-kit/components";
 
 // Images
 import ProviderMapLogo from "../../../../assets/img/provider-map-logo.png";

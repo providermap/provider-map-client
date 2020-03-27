@@ -1,5 +1,6 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 // Components
 import Text from "@airbnb/lunar/lib/components/Text";
@@ -8,7 +9,7 @@ import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
 import Breadcrumbs, { Breadcrumb } from "@airbnb/lunar/lib/components/Breadcrumbs";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
 import Link from "@airbnb/lunar/lib/components/Link";
-import { Div, Container, Row, Col } from "../../../ui-kit/html";
+import { Div, Container, Row, Col } from "../../../ui-kit/components";
 
 // Firestore DB
 import { db } from "../../../../firebase";
@@ -25,35 +26,22 @@ const Facility = () => {
   // Function to send user back to facilities page
   const pushToFacilities = useCallback(() => push(`/facility/all`), []);
 
-  const [ isReady, setIsReady ] = useState(false);
-  const [ facility, setFacility ] = useState([]);
-  const [ error, setError ] = useState(null);
-  console.log("Facility -> facility", facility)
+  const query = db.collection("facilities").where("provider_id", "==", Number(providerId));
 
-  const fetchFacility = async () => {
-    try {
-      const data = await db.collection("facilities_dev").where("provider_id", "==", Number(providerId)).get();
-
-      // We want the first facility from the query (TODO: Figure out a clean way to do this)
-      setFacility(data.docs.map((doc => doc.data()))[0]);
-      setIsReady(true);
-    } catch (error) {
-      setError(error);
-    }
-  }
-
-  useEffect(() => void fetchFacility(), []);
+  const [ data, loading, error ] = useCollectionData(query);
+  // Get first item of data array
+  const facility = data?.shift();
 
   return (
     <AppLoader
       centered
       error={error}
       errorTitle="Please try again later. We apologize for the inconvenience."
-      fetched={isReady}
+      fetched={!loading && !!facility}
       failureText="Failed to load facility."
       loadingText="Loading facility.">
 
-      <Layout minHeight="360px" fluid>
+      <Layout minHeight="360px">
         <Container>
           <Breadcrumbs accessibilityLabel="Breadcrumb">
             <Breadcrumb label="Facilities" onClick={pushToFacilities} />
@@ -102,8 +90,7 @@ const Facility = () => {
 
 
       <Container paddingTop="100px" overflowWrap="break-word">
-        {/* { JSON.stringify(facility) } */}
-        <Text>More information to come. Please reach out to <Link mailto="info@providermap.org">info@providermap.org</Link>.</Text>
+        <Text>More information to come. Please reach out to <Link href="mailto:contact@providermap.org?subject=Contact the Provider Map Team">contact@providermap.org</Link>.</Text>
       </Container>
     </AppLoader>
   );
