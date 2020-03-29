@@ -42,7 +42,7 @@ const Facility = () => {
       loadingText="Loading facility.">
 
       <Layout minHeight="360px" fluid>
-        <Container>
+        <Container paddingTop="10px">
           <Breadcrumbs accessibilityLabel="Breadcrumb">
             <Breadcrumb label="Facilities" onClick={pushToFacilities} />
             <Breadcrumb highlighted selected hideIcon label={facility?.name ?? "Placeholder"} />
