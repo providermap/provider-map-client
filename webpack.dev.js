@@ -7,6 +7,9 @@ const commonWebpackConfig = require("./webpack.common.js");
 
 console.log("Running webpack.dev.js");
 
+console.log("process.env.FIREBASE_APP_ID,", process.env.FIREBASE_APP_ID,)
+
+
 module.exports = merge(commonWebpackConfig, {
   mode: "development",
 
@@ -15,8 +18,6 @@ module.exports = merge(commonWebpackConfig, {
 
   // Plugins Array
   plugins: [
-    // Define placeholders in code
-    new webpack.DefinePlugin({ __DEV__: true }),
     // Required for hot reload
     new webpack.HotModuleReplacementPlugin(),
   ],
@@ -24,7 +25,7 @@ module.exports = merge(commonWebpackConfig, {
   // Define dev server config
   devServer: {
     compress: true,
-    contentBase: "./dist",
+    contentBase: "./public",
     // Fall back browser history api
     historyApiFallback: true,
     // Enable hot reloading

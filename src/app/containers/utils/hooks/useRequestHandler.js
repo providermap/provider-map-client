@@ -15,7 +15,7 @@ const useRequestHandler = (apiRoute) => {
 
       // Make API call to get random person
       const response = await axios(apiRoute);
-      console.log("makeApiRequestAsync -> response", response);
+      // console.log("makeApiRequestAsync -> response", response);
 
       // Set response data in state
       setResponse(response?.data);

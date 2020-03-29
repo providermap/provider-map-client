@@ -8,7 +8,7 @@ COPY . .
 # Install react app dependencies
 RUN npm install --only=prod
 
-# Build react app, output location: dist/
+# Build react app, output location: public/
 RUN npm run build-prod
 
 # Expose port 80

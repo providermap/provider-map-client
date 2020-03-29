@@ -1,5 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
+// Initialize firebase
+import "./firebase";
+
+// Initialize lunar
 import Core from "@airbnb/lunar";
 
 Core.initialize({
