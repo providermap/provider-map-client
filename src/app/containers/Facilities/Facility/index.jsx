@@ -41,7 +41,7 @@ const Facility = () => {
       failureText="Failed to load facility."
       loadingText="Loading facility.">
 
-      <Layout minHeight="360px">
+      <Layout minHeight="360px" fluid>
         <Container>
           <Breadcrumbs accessibilityLabel="Breadcrumb">
             <Breadcrumb label="Facilities" onClick={pushToFacilities} />
