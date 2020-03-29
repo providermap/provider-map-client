@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, /*useState*/ } from "react";
 import { useHistory } from "react-router-dom" ;
 
 // Public components
@@ -6,8 +6,8 @@ import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader"
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Button from "@airbnb/lunar/lib/components/Button";
-import Chip from "@airbnb/lunar/lib/components/Chip";
-import Card, { Content } from "@airbnb/lunar/lib/components/Card";
+// import Chip from "@airbnb/lunar/lib/components/Chip";
+// import Card, { Content } from "@airbnb/lunar/lib/components/Card";
 import { Container, Div } from "../../../ui-kit/components";
 
 // Private components
@@ -19,8 +19,9 @@ import { db } from "../../../../firebase";
 
 // Utils
 import useFirestorePagination from "../../utils/hooks/useFirestorePagination";
+
 // Definitions
-import { facilityTypes } from "./definitions";
+// import { facilityTypes } from "./definitions";
 
 
 const AllFacilities = () => {
@@ -32,15 +33,15 @@ const AllFacilities = () => {
   let query = db.collection("facilities").orderBy("total_bed_count", "desc");
 
   // Filter state values
-  const [ facilityType, setFacilityType ] = useState(null);
-  const setFacilityTypeFilter = (_facilityType) => () => {
-    // If clicking chip of existing filter, turn off facility type filter otherwise set facility type filter
-    if (_facilityType === facilityType) {
-      setFacilityType();
-    } else {
-      setFacilityType(_facilityType);
-    }
-  }
+  // const [ facilityType, setFacilityType ] = useState(null);
+  // const setFacilityTypeFilter = (_facilityType) => () => {
+  //   // If clicking chip of existing filter, turn off facility type filter otherwise set facility type filter
+  //   if (_facilityType === facilityType) {
+  //     setFacilityType();
+  //   } else {
+  //     setFacilityType(_facilityType);
+  //   }
+  // }
 
   // Check filter types to add to base query
   // if (facilityType) {
@@ -94,19 +95,19 @@ const AllFacilities = () => {
               <Text micro>({facilities?.length} results)</Text>
             </Div>
 
-            <Card>
+            {/* <Card>
               <Content middleAlign>
                 <Div paddingBottom="8px">Filter By Facility Type</Div>
-                <Div display="flex" alignItems="center" justifyContent="space-between">
-                  {/* Map through facility type filter options and display chips */}
-                  { facilityTypes.map((_facilityType) => (
+                <Div display="flex" alignItems="center" justifyContent="space-between"> */}
+                  {/** Map through facility type filter options and display chips */}
+                  {/* { facilityTypes.map((_facilityType) => (
                     <Chip key={_facilityType} active={_facilityType === facilityType} onClick={setFacilityTypeFilter(_facilityType)}>{ _facilityType }</Chip>
                   ))}
                 </Div>
               </Content>
             </Card>
 
-            <Div paddingY="5px" />
+            <Div paddingY="5px" /> */}
 
             <AdaptiveGrid defaultItemsPerRow={2}>
               {/* Map through facilities and display facility cards */}
