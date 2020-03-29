@@ -6,31 +6,31 @@ import {
 } from "styled-bootstrap-grid";
 
 
-const Container = styled(BootstrapContainer)`
+export const Container = styled(BootstrapContainer)`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-const Div = styled.div`
+export const Form = styled.form`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-const Row = styled(BootstrapRow)`
-  margin: 0;
+export const Div = styled.div`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-const Col = styled(BootstrapCol)`
-  padding: 0;
+export const Row = styled(BootstrapRow)`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-const Flexbox = styled.div`
+export const Col = styled(BootstrapCol)`
+  ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
+`;
+
+export const Flexbox = styled.div`
   display: flex;
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
 
-const Image = styled.img`
+export const Image = styled.img`
   ${({ theme: { applyGroove }, ...props }) => applyGroove(props)}
 `;
-
-export { Container, Div, Row, Col, Flexbox, Image };
