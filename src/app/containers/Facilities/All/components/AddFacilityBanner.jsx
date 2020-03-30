@@ -21,7 +21,7 @@ const AddFacilityBanner = () => {
       <Div display="flex" alignItems="center" justifyContent="space-between" padding="20px">
         <Div>
           <Text large>Help healthcare workers identify temporary medical facilities treating COVID-19.</Text>
-          <Text muted>Many hospitals, hotels and buildings are being converted to provide services for COVID-19 patients. If you know of a facility nost listed, please add it to our database for visibility.</Text>
+          <Text muted>Many hospitals, hotels and buildings are being converted to provide services for COVID-19 patients. If you know of a facility not listed, please add it to our database for visibility.</Text>
         </Div>
 
         <Div width="160px" textAlign="right">
