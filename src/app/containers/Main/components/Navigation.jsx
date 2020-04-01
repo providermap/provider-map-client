@@ -20,7 +20,6 @@ const Navigation = () => {
   return (
     <Container backgroundColor="#eee" boxShadow="rgba(48,48,48,0.12) 0px 4px 16px" borderBottom="1px solid #ccc" fluid>
       <Container>
-
         <Flexbox width="100%" alignItems="center" justifyContent="space-between">
           <Image src={ProviderMapLogo} height="60px" width="200px" onClick={pushToHome} cursor="pointer" />
           <Text>COVID-19</Text>

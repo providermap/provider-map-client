@@ -14,7 +14,7 @@ module.exports = {
     "node": true
   },
   "plugins": [
-    "babel",
+    // "babel",
     "import",
     "react",
     "react-hooks",
