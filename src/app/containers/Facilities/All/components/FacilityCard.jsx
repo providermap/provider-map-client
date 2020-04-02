@@ -12,6 +12,7 @@ import { Div, Flexbox, Row, Col } from "../../../../ui-kit/components";
 // Utils
 import timeAgo from "../../../utils/timeAgo";
 
+
 const FacilityCard = ({ push, facility }) => {
 
   // Facility data
