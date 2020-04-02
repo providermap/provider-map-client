@@ -38,7 +38,6 @@ const AddFacility = () => {
 
   // Initialize useForm hook for control inputs and handleSubmit handler
   const { control, errors, handleSubmit, reset, watch } = useForm();
-  console.log("AddFacility -> errors", errors)
   // TODO: https://react-hook-form.com/api#validationSchema use this with Yup for validation rules so they are centralized
 
   // Watch isContactable & facilityType fields for dynamic form flags
