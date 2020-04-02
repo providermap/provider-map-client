@@ -9,11 +9,16 @@ import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
 import Breadcrumbs, { Breadcrumb } from "@airbnb/lunar/lib/components/Breadcrumbs";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
 import Link from "@airbnb/lunar/lib/components/Link";
-import Button from '@airbnb/lunar/lib/components/Button'
 import { Div, Container, Row, Col } from "../../../ui-kit/components";
+import Card from '@airbnb/lunar/lib/components/Card'
+import CardContent from "@airbnb/lunar/lib/components/Card/Content";
+import MenuToggle from '@airbnb/lunar/lib/components/MenuToggle'
+import MenuItem from "@airbnb/lunar/lib/components/Menu/Item"
+
 
 // Firestore DB
 import { db } from "../../../../firebase";
+
 
 
 const Facility = () => {
@@ -42,7 +47,7 @@ const Facility = () => {
       failureText="Failed to load facility."
       loadingText="Loading facility.">
 
-      <Layout minHeight="360px" fluid> 
+      <Layout minHeight="400px" fluid> 
         <Container paddingTop="10px" >
           <Breadcrumbs accessibilityLabel="Breadcrumb">
             <Breadcrumb label="Facilities" onClick={pushToFacilities} />
@@ -59,9 +64,12 @@ const Facility = () => {
             </Text>
             </Col>
             <Col col={3}>
-            <Button large>
-              Button
-              </Button>
+            <Card noPaddingBefore={true}>
+              <CardContent >
+                Available Beds<br/>
+                {facility?.icu_bed_count / facility?.total_bed_count } | {facility?.icu_bed_count}
+              </CardContent>
+            </Card>
             </Col>
             </Row>
           </Div>
@@ -76,12 +84,14 @@ const Facility = () => {
             </Col>
 
             <Col col={3}>
-              <Term label="ICU Beds">{ facility?.icu_bed_count || "--" }</Term>
+              <Term label="Staffed Beds">{ facility?.icu_bed_count || "--" }</Term>
             </Col>
             <Col col={3}>
-            <Button large>
-        Button
-      </Button>
+            <Card maxHeight={20}>
+              <CardContent >
+                Do you work here? <a href="/">Verify now</a>
+              </CardContent>
+            </Card>
             </Col>
           </Row>
 
@@ -100,9 +110,14 @@ const Facility = () => {
               <Term label="Last Updated">{ facility?.last_updated || "--" }</Term>
             </Col>
             <Col col={3}>
-            <Button large>
-        Button
-      </Button>
+            <MenuToggle
+              accessibilityLabel="Add Information"
+              toggleLabel="Add Information"
+              zIndex={10}>
+              <MenuItem onClick={console.log("hi")}>Item 1</MenuItem>
+              <MenuItem onClick={console.log("hi")}>Item 2</MenuItem>
+              <MenuItem onClick={console.log("hi")}>Item 3</MenuItem>
+            </MenuToggle>
             </Col>
           </Row>
         </Container>
