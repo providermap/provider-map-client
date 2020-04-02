@@ -14,6 +14,7 @@ import Card from '@airbnb/lunar/lib/components/Card'
 import CardContent from "@airbnb/lunar/lib/components/Card/Content";
 import MenuToggle from '@airbnb/lunar/lib/components/MenuToggle'
 import MenuItem from "@airbnb/lunar/lib/components/Menu/Item"
+import { GoogleMap, Marker } from "react-google-maps"
 
 
 // Firestore DB
@@ -125,7 +126,16 @@ const Facility = () => {
 
 
       <Container paddingTop="100px" overflowWrap="break-word">
-        <Text>More information to come. Please reach out to <Link href="mailto:contact@providermap.org?subject=Contact the Provider Map Team">contact@providermap.org</Link>.</Text>
+        <Row>
+          <Col col={4}>
+            <Text>More information to come. Please reach out to <Link href="mailto:contact@providermap.org?subject=Contact the Provider Map Team">contact@providermap.org</Link>.</Text>
+          </Col>
+          <Col col={8}>
+          {/* <GoogleMap defaultZoom={8} defaultCenter={{ lat: -34.397, lng: 150.644 }}> */}
+            {/* {<Marker position={{ lat: -34.397, lng: 150.644 }} />} */}
+          {/* </GoogleMap> */}
+          </Col>
+        </Row>
       </Container>
     </AppLoader>
   );
