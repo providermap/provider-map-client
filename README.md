@@ -6,15 +6,20 @@ Provider Map's current tech stack is lean and we look to keep it this way in ord
 
 The application is a ReactJS based application (Redux coming soon, haven't had a need for it yet) bundled with Webpack.
 
-This project leverages the `@airbnb/lunar` UI toolkit and an internal UI toolkit for creating components. For styling, `styled-components` is the weapon of choice. For forms, `react-hook-form` has worked well due to its simplicity.
+This project leverages the @airbnb/lunar UI toolkit and an internal UI toolkit for creating components and building the user interface. For reference, please see Lunar's [storybook](https://airbnb.io/lunar/?path=/story/core-autocomplete--disable-selected-items-with-is-item-selectable) and [github](https://github.com/airbnb/lunar) pages.
 
-For the backend, Provider Map uses Firebase's Firestore NoSQL DB to store information about the facilities. Due to the time sensitivity of the project and the outbreak, Firebase is used for storage, analytics and hosting. With time, this approach can be revaluated.
+For styling, [styled-components](https://styled-components.com/) is the weapon of choice. For forms, [react-hook-form](https://react-hook-form.com/) has worked well due to its simplicity.
+
+For the backend, Provider Map uses Firebase's serverless infrastructure and the Firestore NoSQL DB to store information about the facilities. Due to the time sensitivity of the project and the outbreak, Firebase is used for storage, analytics and hosting. With time, this approach can be revaluated.
+
 
 ## Contributing
-If you are looking to contribute, please see the Issues tab for current open issues to find one that is not being worked on or one that interests you. If you have any questions, feel free to reach out to any of the contributors.
+If you are looking to contribute, please see the [Issues](https://github.com/providermap/provider-map-client/issues) tab for current open issues to find one that is not being worked on or one that interests you. If you have any questions, feel free to reach out to any of the contributors.
+
+Any development task will have to go through peer-review as a Pull Request to the Develop branch.
 
 ## Running the project
-Firstly, you will need the `.env` file from one of the contributors in order to connect to the ProviderMap firebase account.
+Firstly, you will need the .env file from one of the contributors in order to connect to the ProviderMap firebase account.
 
 Before anything, please install the dependencies of the project.
 
