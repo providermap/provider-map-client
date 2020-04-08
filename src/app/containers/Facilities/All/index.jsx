@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
-import AppLoader from "@airbnb/lunar/lib/components/AppLoader"
+import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Button from "@airbnb/lunar/lib/components/Button";
 import Select from "@airbnb/lunar/lib/components/Select";
@@ -37,15 +37,13 @@ const AllFacilities = () => {
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType");
-  // console.log("AllFacilities -> facilityType", facilityType)
   const traumaType = watch("traumaType");
-  // console.log("AllFacilities -> traumaType", traumaType)
 
   // Check filter types to add to base query
-  if (facilityType) {
+  if (facilityType && facilityType !== "All") {
     query = query.where("type", "==", facilityType);
   }
-  if (traumaType) {
+  if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
   }
 
@@ -60,6 +58,9 @@ const AllFacilities = () => {
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
+
+  // Show loader flag
+  const showLoader = useMemo(() => (loading || loadingError), [loading, loadingError]);
 
   return (
     <Container paddingY="20px">
@@ -78,12 +79,12 @@ const AllFacilities = () => {
             </Col>
 
             <Col md="4" sm="12">
-              <Controller as={Select} control={control} name="facilityType" label="Facility Type" placeholder="Select A Facility Type">
+              <Controller as={Select} control={control} name="facilityType" label="Facility Type" small>
                 { facilityTypes.map((facilityType) => <option key={facilityType} value={facilityType}>{ facilityType }</option>) }
               </Controller>
             </Col>
             <Col md="4" sm="12">
-              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" placeholder="Select A Trauma Type">
+              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" small>
                 { traumaTypes.map((traumaType) => <option key={traumaType} value={traumaType}>{ traumaType }</option>) }
               </Controller>
             </Col>
@@ -92,7 +93,7 @@ const AllFacilities = () => {
 
         <Div paddingY="5px" />
 
-        { loading || loadingError &&
+        { showLoader &&
           <AppLoader
             centered
             error={loadingError}
