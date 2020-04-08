@@ -8,7 +8,7 @@ const initialState = {
   items: [],
   lastLoaded: null,
   loading: true,
-  loadingError: true,
+  loadingError: null,
   loadingMore: false,
   initialLoad: true
 };
@@ -65,6 +65,13 @@ const reducer = (state = initialState, action) => {
       }
     }
 
+    case "LOAD": {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
     case "LOAD_MORE": {
       return {
         ...state,
@@ -77,20 +84,21 @@ const reducer = (state = initialState, action) => {
 
 
 const usePaginatedFirestoreQuery = (query, limit = 25, filters) => {
-  console.log("usePaginatedFirestoreQuery -> query", query)
 
   const [ state, dispatch ] = useReducer(reducer, initialState);
-  console.log("usePaginatedFirestoreQuery -> state", state)
 
   const fetchFacilities = async () => {
     try {
       if (state.loadingMore) {
+
+        // Get the next 20 documents started at the last loaded document
         const snapshot = await query.startAfter(state.lastLoaded).limit(20).get();
 
+        // Set last loaded document for reference where to start next query
         const lastLoaded = snapshot.docs[snapshot.docs.length - 1];
 
+        // Iterate through documents and get data to normalize output for component
         const items = snapshot.docs.map((doc => doc.data()));
-        console.log("fetchFacility -> items", items)
 
         // Dispatch load success action
         dispatch({ type: "LOAD_SUCCESS", payload: { items, lastLoaded } });
@@ -104,10 +112,16 @@ const usePaginatedFirestoreQuery = (query, limit = 25, filters) => {
 
   const fetchInitialFacilities = async () => {
     try {
+      // Dispatch action to flip loading flag to true
+      dispatch({ type: "LOAD" });
+
+      // Get the next 20 documents started at the last loaded document
       const snapshot = await query.limit(limit).get();
 
+      // Set last loaded document for reference where to start next query
       const lastLoaded = snapshot.docs[snapshot.docs.length - 1];
 
+      // Iterate through documents and get data to normalize output for component
       const items = snapshot.docs.map((doc => doc.data()));
 
       // Dispatch load success action

@@ -61,8 +61,8 @@ const AddFacility = () => {
   const onSubmit = async (formValues) => {
     try {
 
+      // Facility information
       const normalizedFacility = {
-        // Facility information
         name: formValues?.name,
         address: formValues?.address,
         city: formValues?.city,
@@ -71,7 +71,7 @@ const AddFacility = () => {
         // icu_bed_count: , // TODO: CAPTURE
         created_by: "User Submission",
         // source: source, // TODO: CAPTURE*
-        // treats_covid: ,// TODO: CAPTURE*  (Yes|No|Unknown) RADIO
+        // treats_covid: ,// TODO: CAPTURE* (Yes|No|Unknown) RADIO
         source_date: new Date().toISOString(),
         // status: "", // TODO: CAPTURE (Open|Under Construction)* RADIO
         total_bed_count: formValues?.bedCount,
@@ -82,7 +82,7 @@ const AddFacility = () => {
         user_submission_email: formValues?.email,
         //ventilator_count: , // TODO: CAPTURE
         record_created_date: new Date().toISOString(),
-      }
+      };
 
       // Document object to be added to firestore collection
       const document = {
@@ -95,8 +95,9 @@ const AddFacility = () => {
           text: "The following information has been submitted by a user:",
           html: JSON.stringify(normalizedFacility),
         }
-      }
+      };
 
+      // Add facility document to collection
       await db.collection("facilities_submission").add(document);
 
       // Display success toast if submission is successful
@@ -113,7 +114,6 @@ const AddFacility = () => {
       reset();
     }
     catch (error) {
-      // console.log("onSubmit -> error", error)
       // Display error toast if submission fails
       setToastWithResetTimeout({
         danger: {
