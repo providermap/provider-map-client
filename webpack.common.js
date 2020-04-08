@@ -29,7 +29,7 @@ module.exports = {
       "process.env.FIREBASE_MEASUREMENT_ID": JSON.stringify(process.env.FIREBASE_MEASUREMENT_ID),
     }),
     // Add index.html template and favicon
-    new HtmlWebpackPlugin({ template: "./index.html", favicon: "./src/app/assets/img/favicon.png" }),
+    new HtmlWebpackPlugin({ template: "./index.html", favicon: "./src/app/assets/img/favicon.svg" }),
   ],
 
   resolve: {

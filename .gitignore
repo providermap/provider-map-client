@@ -22,3 +22,7 @@
 server.log
 npm-debug.log*
 .vscode
+
+# firebae emulator debug logs
+firebase-debug.log
+firestore-debug.log

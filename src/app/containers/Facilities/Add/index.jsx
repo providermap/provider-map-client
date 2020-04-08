@@ -16,6 +16,7 @@ import { Container, Form, Row, Col, Div } from "../../../ui-kit/components";
 // Firestore DB
 import { db } from "../../../../firebase";
 
+
 // Styled component
 const CardContainer = styled(Div)`
   padding: 24px;
@@ -38,7 +39,6 @@ const AddFacility = () => {
 
   // Initialize useForm hook for control inputs and handleSubmit handler
   const { control, errors, handleSubmit, reset, watch } = useForm();
-  console.log("AddFacility -> errors", errors)
   // TODO: https://react-hook-form.com/api#validationSchema use this with Yup for validation rules so they are centralized
 
   // Watch isContactable & facilityType fields for dynamic form flags
@@ -60,11 +60,45 @@ const AddFacility = () => {
   // Submit function to submit form to firestore
   const onSubmit = async (formValues) => {
     try {
-      // console.log(formValues);
 
-      // TODO: Normalize values before adding it to firestore
+      // Facility information
+      const normalizedFacility = {
+        name: formValues?.name,
+        address: formValues?.address,
+        city: formValues?.city,
+        country: "USA" ,
+        zip: formValues?.zip,
+        // icu_bed_count: , // TODO: CAPTURE
+        created_by: "User Submission",
+        // source: source, // TODO: CAPTURE*
+        // treats_covid: ,// TODO: CAPTURE* (Yes|No|Unknown) RADIO
+        source_date: new Date().toISOString(),
+        // status: "", // TODO: CAPTURE (Open|Under Construction)* RADIO
+        total_bed_count: formValues?.bedCount,
+        // telephone: , // TODO: CAPTURE
+        type: formValues?.facilityType,
+        population: formValues?.staffCount,
+        is_submission_user_employee: formValues?.isEmployee,
+        user_submission_email: formValues?.email,
+        //ventilator_count: , // TODO: CAPTURE
+        record_created_date: new Date().toISOString(),
+      };
 
-      await db.collection("facilities_dev").add(formValues);
+      // Document object to be added to firestore collection
+      const document = {
+        ...normalizedFacility,
+
+        // Email trigger information
+        to: [ "contact@providermap.org" ],
+        message: {
+          subject: "New Facility Added by User!",
+          text: "The following information has been submitted by a user:",
+          html: JSON.stringify(normalizedFacility),
+        }
+      };
+
+      // Add facility document to collection
+      await db.collection("facilities_submission").add(document);
 
       // Display success toast if submission is successful
       setToastWithResetTimeout({
@@ -80,7 +114,6 @@ const AddFacility = () => {
       reset();
     }
     catch (error) {
-      // console.log("onSubmit -> error", error)
       // Display error toast if submission fails
       setToastWithResetTimeout({
         danger: {

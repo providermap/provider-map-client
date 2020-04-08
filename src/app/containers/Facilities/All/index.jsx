@@ -1,14 +1,14 @@
-import React, { useMemo, /*useState*/ } from "react";
-import { useHistory } from "react-router-dom" ;
+import React, { useMemo } from "react";
+import { useHistory } from "react-router-dom";
+import { useForm, Controller } from "react-hook-form";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
-import AppLoader from "@airbnb/lunar/lib/components/AppLoader"
+import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Button from "@airbnb/lunar/lib/components/Button";
-// import Chip from "@airbnb/lunar/lib/components/Chip";
-// import Card, { Content } from "@airbnb/lunar/lib/components/Card";
-import { Container, Div } from "../../../ui-kit/components";
+import Select from "@airbnb/lunar/lib/components/Select";
+import { Container, Div, Row, Col } from "../../../ui-kit/components";
 
 // Private components
 import AddFacilityBanner from "./components/AddFacilityBanner";
@@ -18,10 +18,10 @@ import FacilityCard from "./components/FacilityCard";
 import { db } from "../../../../firebase";
 
 // Utils
-import useFirestorePagination from "../../utils/hooks/useFirestorePagination";
+import usePaginatedFirestoreQuery from "../../utils/hooks/usePaginatedFirestoreQuery";
 
 // Definitions
-// import { facilityTypes } from "./definitions";
+import { facilityTypes, traumaTypes } from "./definitions";
 
 
 const AllFacilities = () => {
@@ -29,99 +29,108 @@ const AllFacilities = () => {
   // Get history from react-router
   const { push } = useHistory();
 
+  // Initialize useForm hook for control inputs and handleSubmit handler
+  const { control, watch } = useForm();
+
   // Base collection query
   let query = db.collection("facilities").orderBy("total_bed_count", "desc");
 
-  // Filter state values
-  // const [ facilityType, setFacilityType ] = useState(null);
-  // const setFacilityTypeFilter = (_facilityType) => () => {
-  //   // If clicking chip of existing filter, turn off facility type filter otherwise set facility type filter
-  //   if (_facilityType === facilityType) {
-  //     setFacilityType();
-  //   } else {
-  //     setFacilityType(_facilityType);
-  //   }
-  // }
+  // Watch facility type select dropdown value
+  const facilityType = watch("facilityType");
+  const traumaType = watch("traumaType");
 
   // Check filter types to add to base query
-  // if (facilityType) {
-  //   query = query.where("type", "==", facilityType);
-  // }
+  if (facilityType && facilityType !== "All") {
+    query = query.where("type", "==", facilityType);
+  }
+  if (traumaType && traumaType !== "All") {
+    query = query.where("trauma", "==", traumaType);
+  }
 
   const {
     loading,
     loadingMore,
     loadingError,
-    loadingMoreError,
     hasMore,
-    items,
-    loadMore
-  } = useFirestorePagination(query, 20);
-
-  // Convert document to facility data object
-  const facilities = items.map((item => item.data()));
+    items: facilities,
+    loadMore,
+  } = usePaginatedFirestoreQuery(query, 20, { facilityType, traumaType });
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
 
+  // Show loader flag
+  const showLoader = useMemo(() => (loading || loadingError), [loading, loadingError]);
+
   return (
-    <AppLoader
-      centered
-      error={loadingError || loadingMoreError}
-      errorTitle="Please try again later. We apologize for the inconvenience."
-      fetched={!loading}
-      failureText="Failed to load facilities."
-      loadingText="Loading facilities.">
+    <Container paddingY="20px">
 
+      {/* Display banner about adding new facilities */}
+      <AddFacilityBanner/>
 
-      <Container paddingY="20px">
+      <Div paddingY="20px">
+        <Div paddingBottom="20px" paddingLeft="10px">
+          <Row>
+            <Col md="4" sm="12" display="flex" alignItems="flex-end">
+              <Div display="flex" alignItems="center">
+                <Div fontSize="26px" paddingRight="10px">Facilities</Div>
+                <Text>({facilities?.length})</Text>
+              </Div>
+            </Col>
 
-        {/* Display banner about adding new facilities */}
-        <AddFacilityBanner/>
+            <Col md="4" sm="12">
+              <Controller as={Select} control={control} name="facilityType" label="Facility Type" small>
+                { facilityTypes.map((facilityType) => <option key={facilityType} value={facilityType}>{ facilityType }</option>) }
+              </Controller>
+            </Col>
+            <Col md="4" sm="12">
+              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" small>
+                { traumaTypes.map((traumaType) => <option key={traumaType} value={traumaType}>{ traumaType }</option>) }
+              </Controller>
+            </Col>
+          </Row>
+        </Div>
 
-        {/* Display null state for no facilities */}
-        { !hasFacilities &&
-          <Div height="400px" display="flex" alignItems="center" justifyContent="center" paddingY="30px">
-            {/* Make this look better */}
-            <Text>No Facilities. Please come back later.</Text>
-          </Div>
+        <Div paddingY="5px" />
+
+        { showLoader &&
+          <AppLoader
+            centered
+            error={loadingError}
+            errorTitle="Please try again later. We apologize for the inconvenience."
+            failureText="Failed to load facilities."
+            loadingText="Loading facilities."/>
         }
 
-        {/* Display facilities if they exist */}
-        { hasFacilities &&
-          <Div paddingY="20px">
-            <Div paddingBottom="20px" paddingLeft="10px">
-              <Div fontSize="26px">Facilities</Div>
-              <Text micro>({facilities?.length} results)</Text>
-            </Div>
+        { !loading &&
+          <>
+            {/* Display null state for no facilities */}
+            { !hasFacilities &&
+              <Div height="400px" display="flex" alignItems="center" justifyContent="center" paddingY="30px">
+                {/* Make this look better */}
+                <Text>No Facilities. Please come back later.</Text>
+              </Div>
+            }
 
-            {/* <Card>
-              <Content middleAlign>
-                <Div paddingBottom="8px">Filter By Facility Type</Div>
-                <Div display="flex" alignItems="center" justifyContent="space-between"> */}
-                  {/** Map through facility type filter options and display chips */}
-                  {/* { facilityTypes.map((_facilityType) => (
-                    <Chip key={_facilityType} active={_facilityType === facilityType} onClick={setFacilityTypeFilter(_facilityType)}>{ _facilityType }</Chip>
-                  ))}
+            {/* Display facilities if they exist */}
+            { hasFacilities &&
+              <Div>
+                <AdaptiveGrid defaultItemsPerRow={2}>
+                  {/* Map through facilities and display facility cards */}
+                  { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
+                </AdaptiveGrid>
+
+                <Div display="flex" justifyContent="center" alignItems="center" paddingY="20px">
+                  { hasMore && <Button onClick={loadMore} loading={loadingMore}>{ hasMore ? "More" : "All facilities loaded." }</Button> }
                 </Div>
-              </Content>
-            </Card>
-
-            <Div paddingY="5px" /> */}
-
-            <AdaptiveGrid defaultItemsPerRow={2}>
-              {/* Map through facilities and display facility cards */}
-              { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
-            </AdaptiveGrid>
-
-            <Div display="flex" justifyContent="center" alignItems="center" paddingY="20px">
-              { hasMore && <Button onClick={loadMore} loading={loadingMore}>{ hasMore ? "More" : "All facilities loaded." }</Button> }
-            </Div>
-          </Div>
+              </Div>
+            }
+          </>
         }
-      </Container>
 
-    </AppLoader>
+      </Div>
+
+    </Container>
   );
 }
 
