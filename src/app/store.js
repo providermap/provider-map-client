@@ -5,6 +5,7 @@ import { routerMiddleware, ConnectedRouter } from "connected-react-router";
 import { Provider } from "react-redux";
 import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { batchDispatchMiddleware } from "redux-batched-actions";
 
 // Root reducer & saga
 import rootReducer from "reducer";
@@ -22,7 +23,8 @@ const sagaMiddleware = createSagaMiddleware({
 
 const middlewareList = [
   routerMiddleware(history),
-  sagaMiddleware
+  sagaMiddleware,
+  batchDispatchMiddleware
 ];
 
 // Build the middleware for intercepting and dispatching navigation actions
@@ -35,7 +37,6 @@ const configureStore = () => {
 
   // Create store object
   const store = createStore(rootReducer(history), storeEnhancers);
-  console.log("configureStore -> process.env.NODE_ENV", process.env.NODE_ENV)
 
   if (process.env.NODE_ENV !== "production" && module.hot) {
     module.hot.accept("reducer", () => {

@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from "react";
-import { useHistory } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 
 // Public components
@@ -25,9 +24,6 @@ import { facilityTypes, traumaTypes } from "containers/Facilities/All/definition
 
 
 const AllFacilities = () => {
-
-  // Get history from react-router
-  const { push } = useHistory();
 
   // Initialize useForm hook for control inputs and handleSubmit handler
   const { control, watch } = useForm();
@@ -122,7 +118,7 @@ const AllFacilities = () => {
               <Div>
                 <AdaptiveGrid defaultItemsPerRow={2}>
                   {/* Map through facilities and display facility cards */}
-                  { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
+                  { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} facility={facility} /> )}
                 </AdaptiveGrid>
 
                 <Div display="flex" justifyContent="center" alignItems="center" paddingY="20px">
