@@ -2,6 +2,8 @@
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/firestore";
+import ReduxSagaFirebase from "redux-saga-firebase";
+
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -15,10 +17,12 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 // Get a reference to the database service
 const db = firebase.firestore();
 
-export { db };
+const rsf = new ReduxSagaFirebase(firebaseApp);
+
+export { db, rsf };

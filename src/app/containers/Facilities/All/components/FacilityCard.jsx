@@ -1,4 +1,6 @@
 import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { push } from "connected-react-router";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
@@ -6,14 +8,14 @@ import Card, { Content } from "@airbnb/lunar/lib/components/Card";
 import Divider from "@airbnb/lunar/lib/components/Divider";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
 import Spacing from "@airbnb/lunar/lib/components/Spacing";
-import Link from '@airbnb/lunar/lib/components/Link'
-import { Div, Flexbox, Row, Col } from "../../../../ui-kit/components";
+import Link from "@airbnb/lunar/lib/components/Link";
+import { Div, Flexbox, Row, Col } from "ui-kit/components";
 
 // Utils
-import timeAgo from "../../../utils/timeAgo";
+import timeAgo from "utils/timeAgo";
 
 
-const FacilityCard = ({ push, facility }) => {
+const FacilityCard = ({ facility }) => {
 
   // Facility data
   const {
@@ -35,12 +37,17 @@ const FacilityCard = ({ push, facility }) => {
     zip
   } = facility;
 
-  // Function to push user to facility specific page
-  const pushToFacility = useCallback(() => push(`/facility/provider/${provider_id}`), [provider_id]);
+  const dispatch = useDispatch();
+
+  // Click handler to push user to facility specific page
+  const pushToFacility = useCallback(() => void dispatch(push(`/facility/provider/${provider_id}`)), [provider_id]);
+
+  // Click handler to stop event propagation
+  const stopPropagation = useCallback((event) => event.stopPropagation(), []);
 
   return (
     <Card>
-      <Content truncated onClick={pushToFacility} >
+      <Content onClick={pushToFacility} truncated>
         <Flexbox justifyContent="center" flexDirection="column">
           <Div paddingBottom="16px">
             <Text large>{ name }</Text>
@@ -55,7 +62,7 @@ const FacilityCard = ({ push, facility }) => {
               </Div>
 
               { /* TODO: Add 'Verify Now' link for false case */ }
-              <Text>Verified: { verified ? "Yes" : <Link>Verify Now</Link> }</Text>
+              <Text>Verified: { verified ? "Yes" : <Link onClick={pushToFacility}>Verify Now</Link> }</Text>
             </Flexbox>
 
             <Div>
@@ -85,7 +92,7 @@ const FacilityCard = ({ push, facility }) => {
         <Row>
           <Col col={4}>
             <Term label="Website">
-              <Link href={website} onClick={(event) => event.stopPropagation()}>Visit Website</Link>
+              <Link href={website} target="_blank" rel="noopener noreferrer" onClick={stopPropagation}>Visit Website</Link>
             </Term>
           </Col>
 

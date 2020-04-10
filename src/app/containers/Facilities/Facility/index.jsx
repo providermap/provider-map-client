@@ -9,10 +9,10 @@ import Layout from "@airbnb/lunar-layouts/lib/components/Layout";
 import Breadcrumbs, { Breadcrumb } from "@airbnb/lunar/lib/components/Breadcrumbs";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
 import Link from "@airbnb/lunar/lib/components/Link";
-import { Div, Container, Row, Col } from "../../../ui-kit/components";
+import { Div, Container, Row, Col } from "ui-kit/components";
 
 // Firestore DB
-import { db } from "../../../../firebase";
+import { db } from "utils/firebase";
 
 
 const Facility = () => {

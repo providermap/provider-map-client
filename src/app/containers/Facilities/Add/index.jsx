@@ -11,10 +11,10 @@ import Toast from "@airbnb/lunar/lib/components/Toast";
 import CheckboxController from "@airbnb/lunar/lib/components/CheckBoxController";
 import RadioButtonController from "@airbnb/lunar/lib/components/RadioButtonController";
 import Select from "@airbnb/lunar/lib/components/Select";
-import { Container, Form, Row, Col, Div } from "../../../ui-kit/components";
+import { Container, Form, Row, Col, Div } from "ui-kit/components";
 
 // Firestore DB
-import { db } from "../../../../firebase";
+import { db } from "utils/firebase";
 
 
 // Styled component

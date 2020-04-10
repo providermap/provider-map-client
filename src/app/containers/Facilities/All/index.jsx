@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import React, { memo, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 // Public components
@@ -8,26 +7,23 @@ import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Button from "@airbnb/lunar/lib/components/Button";
 import Select from "@airbnb/lunar/lib/components/Select";
-import { Container, Div, Row, Col } from "../../../ui-kit/components";
+import { Container, Div, Row, Col } from "ui-kit/components";
 
 // Private components
-import AddFacilityBanner from "./components/AddFacilityBanner";
-import FacilityCard from "./components/FacilityCard";
+import AddFacilityBanner from "containers/Facilities/All/components/AddFacilityBanner";
+import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
 // Firestore DB
-import { db } from "../../../../firebase";
+import { db } from "utils/firebase";
 
-// Utils
-import usePaginatedFirestoreQuery from "../../utils/hooks/usePaginatedFirestoreQuery";
+// Hooks
+import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
 
 // Definitions
-import { facilityTypes, traumaTypes } from "./definitions";
+import { facilityTypes, traumaTypes } from "containers/Facilities/All/definitions";
 
 
 const AllFacilities = () => {
-
-  // Get history from react-router
-  const { push } = useHistory();
 
   // Initialize useForm hook for control inputs and handleSubmit handler
   const { control, watch } = useForm();
@@ -43,24 +39,25 @@ const AllFacilities = () => {
   if (facilityType && facilityType !== "All") {
     query = query.where("type", "==", facilityType);
   }
+
   if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
   }
 
   const {
-    loading,
-    loadingMore,
-    loadingError,
-    hasMore,
     items: facilities,
-    loadMore,
-  } = usePaginatedFirestoreQuery(query, 20, { facilityType, traumaType });
+    isLoading,
+    isLoadingMore,
+    hasMore,
+    error,
+    loadMoreResults
+  } = usePaginatedFirestoreQuery(query, 20, facilityType, traumaType);
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
 
   // Show loader flag
-  const showLoader = useMemo(() => (loading || loadingError), [loading, loadingError]);
+  const showLoader = useMemo(() => (isLoading || error), [isLoading, error]);
 
   return (
     <Container paddingY="20px">
@@ -71,19 +68,22 @@ const AllFacilities = () => {
       <Div paddingY="20px">
         <Div paddingBottom="20px" paddingLeft="10px">
           <Row>
-            <Col md="4" sm="12" display="flex" alignItems="flex-end">
+
+            {/* Facilities Count */}
+            <Col md="4" display="flex" alignItems="flex-end">
               <Div display="flex" alignItems="center">
                 <Div fontSize="26px" paddingRight="10px">Facilities</Div>
                 <Text>({facilities?.length})</Text>
               </Div>
             </Col>
 
-            <Col md="4" sm="12">
+            {/* Filters */}
+            <Col md="4">
               <Controller as={Select} control={control} name="facilityType" label="Facility Type" small>
                 { facilityTypes.map((facilityType) => <option key={facilityType} value={facilityType}>{ facilityType }</option>) }
               </Controller>
             </Col>
-            <Col md="4" sm="12">
+            <Col md="4">
               <Controller as={Select} control={control} name="traumaType" label="Trauma Type" small>
                 { traumaTypes.map((traumaType) => <option key={traumaType} value={traumaType}>{ traumaType }</option>) }
               </Controller>
@@ -96,13 +96,14 @@ const AllFacilities = () => {
         { showLoader &&
           <AppLoader
             centered
-            error={loadingError}
+            error={error}
             errorTitle="Please try again later. We apologize for the inconvenience."
             failureText="Failed to load facilities."
-            loadingText="Loading facilities."/>
+            loadingText="Loading facilities."
+          />
         }
 
-        { !loading &&
+        { !isLoading &&
           <>
             {/* Display null state for no facilities */}
             { !hasFacilities &&
@@ -117,11 +118,11 @@ const AllFacilities = () => {
               <Div>
                 <AdaptiveGrid defaultItemsPerRow={2}>
                   {/* Map through facilities and display facility cards */}
-                  { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} push={push} facility={facility} /> )}
+                  { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} facility={facility} /> )}
                 </AdaptiveGrid>
 
                 <Div display="flex" justifyContent="center" alignItems="center" paddingY="20px">
-                  { hasMore && <Button onClick={loadMore} loading={loadingMore}>{ hasMore ? "More" : "All facilities loaded." }</Button> }
+                  { hasMore && <Button onClick={loadMoreResults} loading={isLoadingMore}>{ hasMore ? "More" : "All facilities loaded." }</Button> }
                 </Div>
               </Div>
             }
@@ -134,4 +135,4 @@ const AllFacilities = () => {
   );
 }
 
-export default AllFacilities;
+export default memo(AllFacilities);
