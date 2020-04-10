@@ -19,8 +19,13 @@ const findLastLoadedDocument = (results) => results.docs[results.docs.length - 1
 
 const generateItemsFromResults = (results) => results.docs.map(doc => doc.data());
 
+// TODO: Discuss just using our own async get lambdas
+// const getSnapshotAsync = async (query) => await query.get();
+
 
 function* initialLoadSaga({ payload: { query, pageSize } }) {
+  console.log("function*initialLoadSaga -> { payload: { query, pageSize } }", { payload: { query, pageSize } })
+
   try {
     yield put(batchActions([
       // Set isLoading flag to true

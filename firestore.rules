@@ -20,5 +20,9 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    match /facilities_geopoint/{facility} {
+      allow read, write: if false;
+    }
+
   }
 }

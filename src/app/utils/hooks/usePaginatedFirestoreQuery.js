@@ -2,7 +2,6 @@ import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import md5 from "md5";
 
-
 // Action Creators
 import { initialLoad, loadMore } from "store/query/actions";
 
@@ -11,6 +10,7 @@ import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "
 
 
 const usePaginatedFirestoreQuery = (query, pageSize = 20, ...filters) => {
+console.log("usePaginatedFirestoreQuery -> ...filters", ...filters)
 
   const dispatch = useDispatch();
 

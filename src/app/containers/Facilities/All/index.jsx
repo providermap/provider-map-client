@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import firebase from "firebase/app";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
@@ -25,13 +24,14 @@ import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
 import { facilityTypes, traumaTypes } from "containers/Facilities/All/definitions";
 
 // Selectors
-import { getLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
+import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
 
 
 const AllFacilities = () => {
 
   // State values
   const { latitude, longitude } = useSelector(getLocation);
+  const geoLocation = useSelector(getGeoLocation);
   const areLocationServicesEnabled = useSelector(getAreLocationServicesEnabled);
 
   // Initialize useForm hook for control inputs and handleSubmit handler
@@ -53,8 +53,8 @@ const AllFacilities = () => {
     query = query.where("trauma", "==", traumaType);
   }
   if (areLocationServicesEnabled) {
-    console.log("Querying by location");
-    query = query.near({ center: new firebase.firestore.GeoPoint(latitude, longitude), radius: 1000 });
+    console.log("AllFacilities -> geoLocation", geoLocation)
+    query = query.near({ center: geoLocation });
   }
 
   const {
@@ -64,7 +64,7 @@ const AllFacilities = () => {
     hasMore,
     error,
     loadMoreResults
-  } = usePaginatedFirestoreQuery(query, 20, facilityType, traumaType);
+  } = usePaginatedFirestoreQuery(query, 20, facilityType, traumaType, latitude, longitude);
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
