@@ -9,9 +9,9 @@ import AddFacility from "./Add";
 
 const Facilities = ({ match: { url } }) => (
   <Switch>
-    <Route path={`${url}/all`} component={AllFacilities} />
-    <Route path={`${url}/provider/:providerId`} component={Facility} />
-    <Route path={`${url}/add`} component={AddFacility} />
+    <Route exact path={`${url}/all`} component={AllFacilities} />
+    <Route exact path={`${url}/provider/:providerId(\\d+)`} component={Facility} />
+    <Route exact path={`${url}/add`} component={AddFacility} />
     <Redirect to={`${url}/all`} />
   </Switch>
 );
