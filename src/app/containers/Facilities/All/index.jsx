@@ -1,5 +1,7 @@
 import React, { memo, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
+import firebase from "firebase/app";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
@@ -14,7 +16,7 @@ import AddFacilityBanner from "containers/Facilities/All/components/AddFacilityB
 import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
 // Firestore DB
-import { db } from "utils/firebase";
+import { geofirestore } from "utils/firebase";
 
 // Hooks
 import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
@@ -22,14 +24,21 @@ import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
 // Definitions
 import { facilityTypes, traumaTypes } from "containers/Facilities/All/definitions";
 
+// Selectors
+import { getLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
+
 
 const AllFacilities = () => {
+
+  // State values
+  const { latitude, longitude } = useSelector(getLocation);
+  const areLocationServicesEnabled = useSelector(getAreLocationServicesEnabled);
 
   // Initialize useForm hook for control inputs and handleSubmit handler
   const { control, watch } = useForm();
 
   // Base collection query
-  let query = db.collection("facilities").orderBy("total_bed_count", "desc");
+  let query = geofirestore.collection("facilities_geopoint"); //.orderBy("total_bed_count", "desc");
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType");
@@ -42,6 +51,10 @@ const AllFacilities = () => {
 
   if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
+  }
+  if (areLocationServicesEnabled) {
+    console.log("Querying by location");
+    query = query.near({ center: new firebase.firestore.GeoPoint(latitude, longitude), radius: 1000 });
   }
 
   const {

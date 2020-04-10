@@ -1,6 +1,9 @@
 import React, { memo, useMemo, useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 
+// UI-Kit
+import { Container } from "ui-kit/components";
+
 // Action Creators
 import { updateUserLocation } from "containers/LocationProvider/store/locationProviderActions";
 
@@ -70,7 +73,9 @@ const LocationProvider = () => {
   // If there is an error or we are unable to fetch user location, show banner
   if (canShowBanner && message && !hasBannerBeenDismissed) {
     return (
-      <Toast id="location-error-banner" message={message} onClose={onBannerClose} duration={0} delay={300} danger />
+      <Container>
+        <Toast id="location-error-banner" message={message} onClose={onBannerClose} duration={0} delay={300} danger />
+      </Container>
     );
   }
 
