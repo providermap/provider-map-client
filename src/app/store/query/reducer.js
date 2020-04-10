@@ -15,9 +15,7 @@ export default (state = initialState, { type, payload }) => {
   switch (type) {
 
     case INITIAL_LOAD_SUCCESS: {
-      const { items, pageSize, lastLoadedDocument } = payload;
-
-      console.log("pageSize", pageSize)
+      const { items, lastLoadedDocument } = payload;
 
       return {
         ...state,
@@ -28,9 +26,7 @@ export default (state = initialState, { type, payload }) => {
     }
 
     case LOAD_MORE_SUCCESS: {
-      const { items, pageSize, lastLoadedDocument } = payload;
-
-      console.log("pageSize", pageSize)
+      const { items, lastLoadedDocument } = payload;
 
       // Clone existing items into new array to not mutate redux state
       const existingItems = [ ...state.items ];

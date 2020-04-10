@@ -5,13 +5,13 @@ export const INITIAL_LOAD = "QUERY/INITIAL_LOAD";
 export const initialLoad = (query, pageSize) => createAction(INITIAL_LOAD)({ query, pageSize });
 
 export const INITIAL_LOAD_SUCCESS = "QUERY/INITIAL_LOAD_SUCCESS";
-export const initialLoadSuccess = (items, pageSize, lastLoadedDocument) => createAction(INITIAL_LOAD_SUCCESS)({ items, pageSize, lastLoadedDocument });
+export const initialLoadSuccess = (items, lastLoadedDocument) => createAction(INITIAL_LOAD_SUCCESS)({ items, lastLoadedDocument });
 
 export const LOAD_MORE = "QUERY/LOAD_MORE";
 export const loadMore = (query, pageSize) => createAction(LOAD_MORE)({ query, pageSize });
 
 export const LOAD_MORE_SUCCESS = "QUERY/LOAD_MORE_SUCCESS";
-export const loadMoreSuccess = (items, pageSize, lastLoadedDocument) => createAction(LOAD_MORE_SUCCESS)({ items, pageSize, lastLoadedDocument });
+export const loadMoreSuccess = (items, lastLoadedDocument) => createAction(LOAD_MORE_SUCCESS)({ items, lastLoadedDocument });
 
 export const SET_IS_LOADING = "QUERY/SET_IS_LOADING";
 export const setIsLoading = (isLoading) => createAction(SET_IS_LOADING)({ isLoading });

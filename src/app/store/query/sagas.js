@@ -39,7 +39,7 @@ function* initialLoadSaga({ payload: { query, pageSize } }) {
     }
 
     // Save loaded items in redux store
-    yield put(initialLoadSuccess(items, pageSize, lastLoadedDocument));
+    yield put(initialLoadSuccess(items, lastLoadedDocument));
   }
   catch (error) {
     // Handle query error
@@ -77,7 +77,7 @@ function* loadMoreSaga({ payload: { query, pageSize } }) {
     }
 
     // Save loaded items in redux store
-    yield put(loadMoreSuccess(items, pageSize, lastLoadedDocument));
+    yield put(loadMoreSuccess(items, lastLoadedDocument));
   }
   catch (error) {
     // Handle query error
