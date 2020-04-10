@@ -1,5 +1,4 @@
 import React from "react";
-// import { Provider } from "react-redux";
 
 // Theme provider
 import Theme from "./ui-kit/theme";
@@ -10,19 +9,18 @@ import ErrorBoundary from "./containers/ErrorBoundary";
 import Main from "./containers/Main";
 
 // Store configurations
-// import { configureStore } from "./store";
-// const store = configureStore();
+import Store from "./store";
 
 
 const App = () => (
-  // <Provider store={store}>
-  <ErrorBoundary>
-    <GlobalStyles />
+  <Store>
+    <ErrorBoundary>
+      <GlobalStyles />
       <Theme>
         <Main />
-    </Theme>
-  </ErrorBoundary>
-  // </Provider>
+      </Theme>
+    </ErrorBoundary>
+  </Store>
 );
 
 export default App;
