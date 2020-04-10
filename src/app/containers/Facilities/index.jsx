@@ -2,9 +2,9 @@ import React, { memo } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 // Containers
-import AllFacilities from "./All";
-import Facility from "./Facility";
-import AddFacility from "./Add";
+import AllFacilities from "containers/Facilities/All";
+import Facility from "containers/Facilities/Facility";
+import AddFacility from "containers/Facilities/Add";
 
 
 const Facilities = ({ match: { url } }) => (

@@ -2,11 +2,11 @@ import React, { memo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 
 // UI components
-import { Flexbox, Image, Container } from "../../../ui-kit/components";
+import { Flexbox, Image, Container } from "ui-kit/components";
 import Text from "@airbnb/lunar/lib/components/Text";
 
 // Images
-import ProviderMapLogo from "../../../assets/img/provider-map-logo.png";
+import ProviderMapLogo from "assets/img/provider-map-logo.png";
 
 
 const Navigation = () => {

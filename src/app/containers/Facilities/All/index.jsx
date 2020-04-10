@@ -8,20 +8,20 @@ import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Button from "@airbnb/lunar/lib/components/Button";
 import Select from "@airbnb/lunar/lib/components/Select";
-import { Container, Div, Row, Col } from "../../../ui-kit/components";
+import { Container, Div, Row, Col } from "ui-kit/components";
 
 // Private components
-import AddFacilityBanner from "./components/AddFacilityBanner";
-import FacilityCard from "./components/FacilityCard";
+import AddFacilityBanner from "containers/Facilities/All/components/AddFacilityBanner";
+import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
 // Firestore DB
-import { db } from "../../../../firebase";
+import { db } from "utils/firebase";
 
 // Utils
-import usePaginatedFirestoreQuery from "../../utils/hooks/usePaginatedFirestoreQuery";
+import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
 
 // Definitions
-import { facilityTypes, traumaTypes } from "./definitions";
+import { facilityTypes, traumaTypes } from "containers/Facilities/All/definitions";
 
 
 const AllFacilities = () => {

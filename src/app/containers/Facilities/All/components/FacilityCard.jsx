@@ -7,10 +7,10 @@ import Divider from "@airbnb/lunar/lib/components/Divider";
 import { Term } from "@airbnb/lunar/lib/components/TermList";
 import Spacing from "@airbnb/lunar/lib/components/Spacing";
 import Link from '@airbnb/lunar/lib/components/Link'
-import { Div, Flexbox, Row, Col } from "../../../../ui-kit/components";
+import { Div, Flexbox, Row, Col } from "ui-kit/components";
 
 // Utils
-import timeAgo from "../../../utils/timeAgo";
+import timeAgo from "utils/timeAgo";
 
 
 const FacilityCard = ({ push, facility }) => {

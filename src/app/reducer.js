@@ -2,13 +2,13 @@ import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
 
 // Reducers
-//import blahReducer from "containers/x/y/reducer";
+import locationProviderReducer from "containers/LocationProvider/store/locationProviderReducer";
 
 
 // Combine all reducers to create the state of the application
 const appReducer = (history) => combineReducers({
-  // Container reducers
-  // blah: blahReducer,
+
+  location: locationProviderReducer,
 
   // Utility reducers
   router: connectRouter(history),

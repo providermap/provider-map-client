@@ -1,29 +1,37 @@
 import React, { memo, useMemo, useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+
+// Action Creators
+import { updateUserLocation } from "containers/LocationProvider/store/locationProviderActions";
 
 // Components
 import Toast from "@airbnb/lunar/lib/components/Toast";
 
 // Hooks
-import useGeolocation from "../utils/hooks/useGeolocation";
+import useGeolocation from "utils/hooks/useGeolocation";
 
 
 const LocationProvider = () => {
 
-  // Get current location of user
+  const dispatch = useDispatch();
+
+  // Attempt to get current location of user
   const { latitude, longitude, error } = useGeolocation();
 
-  console.log("LocationProvider -> latitude, longitude, error", latitude, longitude, error)
-  // TODO: Update latitude and longitude in redux store when it changes
-
-  // Add a delay before showing banner (this gives the browser a chance to fetch user location)
-  const [ canShowBanner, setCanShowBanner ] = useState(false);
-
+  // Set location updates in redux store
   useEffect(() => {
 
-    // Wait 2 seconds before allowing banner to show
-    setTimeout(() => void setCanShowBanner(true), 2000);
+    // If location coordinates or error state have not changed, don't update values in redux store
+    if (!latitude && !longitude && !error) return;
 
-  }, []);
+    dispatch(updateUserLocation(latitude, longitude, error))
+
+  }, [latitude, longitude, error]);
+
+  // Wait 2 seconds before allowing error banner to show (this gives the browser a chance to fetch user location)
+  const [ canShowBanner, setCanShowBanner ] = useState(false);
+
+  useEffect(() => void setTimeout(() => void setCanShowBanner(true), 2000), []);
 
   // Check if banner has been dismissed
   const [ hasBannerBeenDismissed, setHasBannerBeenDismissed ] = useState(false);
@@ -45,7 +53,7 @@ const LocationProvider = () => {
           return "Current location could not be found.";
 
       case 3:
-        // Error code 3 -> timeout
+        // Error code 3 -> timeout error
         return "Current location could not be found.";
 
       case 4:
@@ -55,7 +63,7 @@ const LocationProvider = () => {
     }
 
     // This condition should fire only after given time to receive location coordinates
-    if (latitude === null && longitude === null) return "For the best experience using Provider Map, please enable location services."
+    if (latitude === null && longitude === null) return "For the best experience using Provider Map, please enable location services.";
 
   }, [error, latitude, longitude]);
 

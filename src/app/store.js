@@ -7,8 +7,8 @@ import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 // Root reducer & saga
-import rootReducer from "./reducer";
-import rootSaga from "./sagas";
+import rootReducer from "reducer";
+import rootSaga from "sagas";
 
 
 // Create a history of your choosing (we"re using a browser history in this case)
@@ -37,8 +37,8 @@ const configureStore = () => {
   const store = createStore(rootReducer(history), storeEnhancers);
   console.log("configureStore -> process.env.NODE_ENV", process.env.NODE_ENV)
 
-  if (process.env.NODE_ENV === "DEV" && module.hot) {
-    module.hot.accept("./reducer", () => {
+  if (process.env.NODE_ENV !== "production" && module.hot) {
+    module.hot.accept("reducer", () => {
       console.log("Enabling Webpack HMR for reducers");
       store.replaceReducer(rootReducer);
     });
