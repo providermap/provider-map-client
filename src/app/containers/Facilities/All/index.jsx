@@ -33,7 +33,7 @@ const AllFacilities = () => {
   const { control, watch } = useForm();
 
   // Base collection query
-  let query = db.collection("facilities").orderBy("total_bed_count", "desc");
+  let query = db.collection("facilities");
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType");
