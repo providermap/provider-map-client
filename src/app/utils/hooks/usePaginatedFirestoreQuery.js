@@ -1,152 +1,39 @@
-import { useReducer, useEffect } from "react";
-
-const initialState = {
-  hasMore: false,
-  after: null,
-  cursor: 0,
-  limit: 0,
-  items: [],
-  lastLoaded: null,
-  loading: true,
-  loadingError: null,
-  loadingMore: false,
-  initialLoad: true
-};
-
-const reducer = (state = initialState, action) => {
-
-  // Get action type and payload
-  const { type, payload } = action;
-
-  switch (type) {
-
-    case "INITIAL_LOAD_SUCCESS": {
-
-      const nextLimit = payload.items.length + payload.limit;
-      const end = payload.items.length < payload.limit || nextLimit === state.limit;
-
-      return {
-        ...state,
-        hasMore: !end || state.hasMore,
-        limit: nextLimit,
-        loading: false,
-        loadingError: null,
-        lastLoaded: payload.lastLoaded,
-        loadingMore: false,
-        items: payload.items,
-        cursor: state.cursor + payload.limit
-      };
-    }
-
-    case "LOAD_SUCCESS": {
-      const existingItems = [ ...state.items ];
-
-      const nextLimit = existingItems.length + payload.limit;
-      const end = existingItems.length < payload.limit || nextLimit === state.limit;
-
-      return {
-        ...state,
-        hasMore: !end || state.hasMore,
-        limit: nextLimit,
-        loading: false,
-        loadingError: null,
-        lastLoaded: payload.lastLoaded,
-        loadingMore: false,
-        items: existingItems.concat(payload.items),
-        cursor: state.cursor + payload.limit
-      };
-    }
-
-    case "LOAD_FAILURE": {
-      return {
-        ...state,
-        items: [],
-        loadingError: payload.error
-      }
-    }
-
-    case "LOAD": {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case "LOAD_MORE": {
-      return {
-        ...state,
-        loadingMore: true,
-      };
-    }
-
-  }
-}
+import { useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import md5 from "md5";
 
 
-const usePaginatedFirestoreQuery = (query, limit = 25, filters) => {
+// Action Creators
+import { initialLoad, loadMore } from "store/query/actions";
 
-  const [ state, dispatch ] = useReducer(reducer, initialState);
+// Selectors
+import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "store/query/selectors";
 
-  const fetchFacilities = async () => {
-    try {
-      if (state.loadingMore) {
 
-        // Get the next 20 documents started at the last loaded document
-        const snapshot = await query.startAfter(state.lastLoaded).limit(20).get();
+const usePaginatedFirestoreQuery = (query, pageSize = 20, ...filters) => {
 
-        // Set last loaded document for reference where to start next query
-        const lastLoaded = snapshot.docs[snapshot.docs.length - 1];
+  const dispatch = useDispatch();
 
-        // Iterate through documents and get data to normalize output for component
-        const items = snapshot.docs.map((doc => doc.data()));
+  // Load initial query documents when filters change (use md5 hash to tell when filters have changed)
+  useEffect(() => void dispatch(initialLoad(query, pageSize)), [md5(JSON.stringify(filters))]);
 
-        // Dispatch load success action
-        dispatch({ type: "LOAD_SUCCESS", payload: { items, lastLoaded } });
+  // Get values from redux store
+  const items = useSelector(getItems);
+  const isLoading = useSelector(getIsLoading);
+  const isLoadingMore = useSelector(getIsLoadingMore);
+  const hasMore = useSelector(getHasMore);
+  const error = useSelector(getError);
 
-      }
-    } catch (error) {
-      // Dispatch load failure action
-      dispatch({ type: "LOAD_FAILURE", payload: { error } });
-    }
-  }
-
-  const fetchInitialFacilities = async () => {
-    try {
-      // Dispatch action to flip loading flag to true
-      dispatch({ type: "LOAD" });
-
-      // Get the next 20 documents started at the last loaded document
-      const snapshot = await query.limit(limit).get();
-
-      // Set last loaded document for reference where to start next query
-      const lastLoaded = snapshot.docs[snapshot.docs.length - 1];
-
-      // Iterate through documents and get data to normalize output for component
-      const items = snapshot.docs.map((doc => doc.data()));
-
-      // Dispatch load success action
-      dispatch({ type: "INITIAL_LOAD_SUCCESS", payload: { items, lastLoaded } });
-    } catch (error) {
-      // Dispatch load failure action
-      dispatch({ type: "LOAD_FAILURE", payload: { error } });
-    }
-  }
-
-  useEffect(() => void fetchInitialFacilities(), [filters.facilityType, filters.traumaType]);
-
-  useEffect(() => void fetchFacilities(), [state.loadingMore]);
-
-  // Trigger firebase to load more data
-  const loadMore = () => dispatch({ type: "LOAD_MORE" });
+  // Callback function to load next batch of paginated documents
+  const loadMoreResults = useCallback(() => void dispatch(loadMore(query, pageSize)), [query, pageSize]);
 
   return {
-    loadingMore: state.loadingMore,
-    loadingError: state.loadingError,
-    loadingMoreError: state.loadingMoreError,
-    loading: state.loading,
-    hasMore: state.hasMore,
-    items: state.items,
-    loadMore,
+    items,
+    isLoading,
+    isLoadingMore,
+    hasMore,
+    error,
+    loadMoreResults
   };
 }
 

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
-class ErrorBoundary extends Component {
+class ErrorBoundary extends PureComponent {
 
   // Initial hasError state
   state = { error: null, info: null }
@@ -29,7 +29,7 @@ class ErrorBoundary extends Component {
         <br />
         <p>Details: {info}</p>
       </div>
-    )
+    );
   }
 }
 

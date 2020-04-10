@@ -1,12 +1,12 @@
-import { all, /*fork*/ } from "redux-saga/effects";
+import { all, fork } from "redux-saga/effects";
 
 // Sagas
-// import blahSagas from "containers/x/y/sagas";
+import querySagas from "store/query/sagas";
 
 
 function* appSagas() {
   yield all([
-    //fork(authenticationSagas),
+    fork(querySagas)
   ]);
 }
 
