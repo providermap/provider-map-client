@@ -1,26 +1,30 @@
-import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
+import { takeEvery, put, call, select } from "redux-saga/effects";
 import { batchActions } from "redux-batched-actions";
 
 // Actions
-import { INITIAL_LOAD, LOAD_MORE } from "store/query/actions";
+import { INITIAL_LOAD, LOAD_MORE } from "./node_modules/utils/hooks/usePaginatedFirestoreQuery/store/actions";
 
 // Action Creators
-import { initialLoadSuccess, loadMoreSuccess, setIsLoading, setIsLoadingMore, setHasMore, setLoadError } from "store/query/actions";
+import {
+  initialLoadSuccess,
+  loadMoreSuccess,
+  setIsLoading,
+  setIsLoadingMore,
+  setHasMore,
+  setLoadError
+} from "./node_modules/utils/hooks/usePaginatedFirestoreQuery/store/actions";
 
 // Selectors
-import { getLastLoadedDocument } from "store/query/selectors";
+import { getLastLoadedDocument } from "./node_modules/utils/hooks/usePaginatedFirestoreQuery/store/selectors";
 
 // Utils
-import { rsf } from "utils/firebase";
+import { rsf } from "./node_modules/utils/firebase";
 
 
 // Helper functions
 const findLastLoadedDocument = (results) => results.docs[results.docs.length - 1];
 
 const generateItemsFromResults = (results) => results.docs.map(doc => doc.data());
-
-// TODO: Discuss just using our own async get lambdas
-const getSnapshotAsync = async (query) => await query.get();
 
 
 function* initialLoadSaga({ payload: { query, pageSize } }) {
@@ -35,7 +39,7 @@ function* initialLoadSaga({ payload: { query, pageSize } }) {
 
     // Make query call
     const results = yield call(
-      getSnapshotAsync,
+      rsf.firestore.getCollection,
       query.limit(pageSize)
     );
 
@@ -102,7 +106,7 @@ function* loadMoreSaga({ payload: { query, pageSize } }) {
 }
 
 function* watch() {
-  yield takeLatest(INITIAL_LOAD, initialLoadSaga);
+  yield takeEvery(INITIAL_LOAD, initialLoadSaga);
   yield takeEvery(LOAD_MORE, loadMoreSaga);
 }
 

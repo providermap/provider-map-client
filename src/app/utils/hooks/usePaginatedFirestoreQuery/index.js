@@ -3,20 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import md5 from "md5";
 
 // Action Creators
-import { initialLoad, loadMore } from "store/query/actions";
+import { initialLoad, loadMore } from "utils/hooks/usePaginatedFirestoreQuery/store/actions";
 
 // Selectors
-import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "store/query/selectors";
+import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "utils/hooks/usePaginatedFirestoreQuery/store/selectors";
 
 
-const usePaginatedFirestoreQuery = (query, pageSize = 20, ...filters) => {
-console.log("usePaginatedFirestoreQuery -> pageSize", pageSize)
+const usePaginatedFirestoreQuery = (query, pageSize = 20, filters) => {
 
   const dispatch = useDispatch();
 
   // Load initial query documents when filters change (use md5 hash to tell when filters have changed)
-  useEffect(() => console.log("usePaginatedFirestoreQuery -> ...filters", ...filters)
- || void dispatch(initialLoad(query, pageSize)), [md5(JSON.stringify(filters))]);
+  useEffect(() => void dispatch(initialLoad(query, pageSize)), [md5(JSON.stringify(filters))]);
 
   // Get values from redux store
   const items = useSelector(getItems);

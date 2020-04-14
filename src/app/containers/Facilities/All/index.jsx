@@ -43,8 +43,8 @@ const AllFacilities = () => {
   let query = geofirestore.collection("facilities_geopoint"); //.orderBy("total_bed_count", "desc");
 
   // Watch facility type select dropdown value
-  const facilityType = watch("facilityType");
-  const traumaType = watch("traumaType");
+  const facilityType = watch("facilityType") ?? null;
+  const traumaType = watch("traumaType") ?? null;
 
   // Check filter types to add to base query
   if (facilityType && facilityType !== "All") {
@@ -55,8 +55,7 @@ const AllFacilities = () => {
     query = query.where("trauma", "==", traumaType);
   }
   if (areLocationServicesEnabled) {
-    console.log("AllFacilities -> geoLocation", geoLocation)
-    query = query.near({ center: geoLocation, limit: PAGE_SIZE });
+    query = query.near({ center: geoLocation, radius: 100, limit: PAGE_SIZE });
   }
 
   const {
@@ -66,7 +65,7 @@ const AllFacilities = () => {
     hasMore,
     error,
     loadMoreResults
-  } = usePaginatedFirestoreQuery(query, PAGE_SIZE, facilityType, traumaType, latitude, longitude);
+  } = usePaginatedFirestoreQuery(query, PAGE_SIZE, { facilityType, traumaType, latitude, longitude });
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
