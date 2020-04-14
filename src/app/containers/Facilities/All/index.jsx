@@ -26,6 +26,8 @@ import { facilityTypes, traumaTypes } from "containers/Facilities/All/definition
 // Selectors
 import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
 
+// Facility pagination size
+const PAGE_SIZE = 20;
 
 const AllFacilities = () => {
 
@@ -54,7 +56,7 @@ const AllFacilities = () => {
   }
   if (areLocationServicesEnabled) {
     console.log("AllFacilities -> geoLocation", geoLocation)
-    query = query.near({ center: geoLocation });
+    query = query.near({ center: geoLocation, limit: PAGE_SIZE });
   }
 
   const {
@@ -64,7 +66,7 @@ const AllFacilities = () => {
     hasMore,
     error,
     loadMoreResults
-  } = usePaginatedFirestoreQuery(query, 20, facilityType, traumaType, latitude, longitude);
+  } = usePaginatedFirestoreQuery(query, PAGE_SIZE, facilityType, traumaType, latitude, longitude);
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);

@@ -1,4 +1,4 @@
-import { takeEvery, put, call, select } from "redux-saga/effects";
+import { call, put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import { batchActions } from "redux-batched-actions";
 
 // Actions
@@ -20,12 +20,10 @@ const findLastLoadedDocument = (results) => results.docs[results.docs.length - 1
 const generateItemsFromResults = (results) => results.docs.map(doc => doc.data());
 
 // TODO: Discuss just using our own async get lambdas
-// const getSnapshotAsync = async (query) => await query.get();
+const getSnapshotAsync = async (query) => await query.get();
 
 
 function* initialLoadSaga({ payload: { query, pageSize } }) {
-  console.log("function*initialLoadSaga -> { payload: { query, pageSize } }", { payload: { query, pageSize } })
-
   try {
     yield put(batchActions([
       // Set isLoading flag to true
@@ -37,7 +35,7 @@ function* initialLoadSaga({ payload: { query, pageSize } }) {
 
     // Make query call
     const results = yield call(
-      rsf.firestore.getCollection,
+      getSnapshotAsync,
       query.limit(pageSize)
     );
 
@@ -104,7 +102,7 @@ function* loadMoreSaga({ payload: { query, pageSize } }) {
 }
 
 function* watch() {
-  yield takeEvery(INITIAL_LOAD, initialLoadSaga);
+  yield takeLatest(INITIAL_LOAD, initialLoadSaga);
   yield takeEvery(LOAD_MORE, loadMoreSaga);
 }
 

@@ -10,12 +10,13 @@ import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "
 
 
 const usePaginatedFirestoreQuery = (query, pageSize = 20, ...filters) => {
-console.log("usePaginatedFirestoreQuery -> ...filters", ...filters)
+console.log("usePaginatedFirestoreQuery -> pageSize", pageSize)
 
   const dispatch = useDispatch();
 
   // Load initial query documents when filters change (use md5 hash to tell when filters have changed)
-  useEffect(() => void dispatch(initialLoad(query, pageSize)), [md5(JSON.stringify(filters))]);
+  useEffect(() => console.log("usePaginatedFirestoreQuery -> ...filters", ...filters)
+ || void dispatch(initialLoad(query, pageSize)), [md5(JSON.stringify(filters))]);
 
   // Get values from redux store
   const items = useSelector(getItems);
