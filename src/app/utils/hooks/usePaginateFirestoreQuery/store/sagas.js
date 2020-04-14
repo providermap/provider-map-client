@@ -2,7 +2,7 @@ import { takeEvery, put, call, select } from "redux-saga/effects";
 import { batchActions } from "redux-batched-actions";
 
 // Actions
-import { INITIAL_LOAD, LOAD_MORE } from "./node_modules/utils/hooks/usePaginatedFirestoreQuery/store/actions";
+import { INITIAL_LOAD, LOAD_MORE } from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 // Action Creators
 import {
@@ -12,13 +12,13 @@ import {
   setIsLoadingMore,
   setHasMore,
   setLoadError
-} from "./node_modules/utils/hooks/usePaginatedFirestoreQuery/store/actions";
+} from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 // Selectors
-import { getLastLoadedDocument } from "./node_modules/utils/hooks/usePaginatedFirestoreQuery/store/selectors";
+import { getLastLoadedDocument } from "utils/hooks/usePaginateFirestoreQuery/store/selectors";
 
 // Utils
-import { rsf } from "./node_modules/utils/firebase";
+import { rsf } from "utils/firebase";
 
 
 // Helper functions

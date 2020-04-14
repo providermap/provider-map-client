@@ -1,12 +1,14 @@
 import { all, fork } from "redux-saga/effects";
 
 // Sagas
-import querySagas from "utils/hooks/usePaginatedFirestoreQuery/store/sagas";
+import paginateQuerySagas from "utils/hooks/usePaginateFirestoreQuery/store/sagas";
+import geoQuerySagas from "utils/hooks/useGeoFirestoreQuery/store/sagas";
 
 
 function* appSagas() {
   yield all([
-    fork(querySagas)
+    fork(geoQuerySagas),
+    fork(paginateQuerySagas)
   ]);
 }
 

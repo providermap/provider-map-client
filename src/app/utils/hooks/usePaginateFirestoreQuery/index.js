@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import md5 from "md5";
 
 // Action Creators
-import { initialLoad, loadMore } from "utils/hooks/usePaginatedFirestoreQuery/store/actions";
+import { initialLoad, loadMore } from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 // Selectors
-import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "utils/hooks/usePaginatedFirestoreQuery/store/selectors";
+import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "utils/hooks/usePaginateFirestoreQuery/store/selectors";
 
 
 const usePaginatedFirestoreQuery = (query, pageSize = 20, filters) => {

@@ -6,7 +6,7 @@ import {
   SET_IS_LOADING_MORE,
   SET_HAS_MORE,
   SET_LOAD_ERROR
-} from "utils/hooks/usePaginatedFirestoreQuery/store/actions";
+} from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 
 const initialState = {

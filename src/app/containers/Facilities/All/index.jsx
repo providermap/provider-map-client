@@ -6,7 +6,6 @@ import { useForm, Controller } from "react-hook-form";
 import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
-import Button from "@airbnb/lunar/lib/components/Button";
 import Select from "@airbnb/lunar/lib/components/Select";
 import { Container, Div, Row, Col } from "ui-kit/components";
 
@@ -18,7 +17,7 @@ import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 import { geofirestore } from "utils/firebase";
 
 // Hooks
-import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
+import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
 
 // Definitions
 import { facilityTypes, traumaTypes } from "containers/Facilities/All/definitions";
@@ -61,11 +60,8 @@ const AllFacilities = () => {
   const {
     items: facilities,
     isLoading,
-    isLoadingMore,
-    hasMore,
     error,
-    loadMoreResults
-  } = usePaginatedFirestoreQuery(query, PAGE_SIZE, { facilityType, traumaType, latitude, longitude });
+  } = useGeoFirestoreQuery(query, PAGE_SIZE, { facilityType, traumaType, latitude, longitude });
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
@@ -134,10 +130,6 @@ const AllFacilities = () => {
                   {/* Map through facilities and display facility cards */}
                   { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} facility={facility} /> )}
                 </AdaptiveGrid>
-
-                <Div display="flex" justifyContent="center" alignItems="center" paddingY="20px">
-                  { hasMore && <Button onClick={loadMoreResults} loading={isLoadingMore}>{ hasMore ? "More" : "All facilities loaded." }</Button> }
-                </Div>
               </Div>
             }
           </>

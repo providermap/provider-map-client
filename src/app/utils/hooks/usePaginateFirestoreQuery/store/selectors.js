@@ -1,5 +1,5 @@
 // Selectors
-const getQueryState = (state) => state.paginationQuery;
+const getQueryState = (state) => state.paginateQuery;
 
 export const getItems = (state) => getQueryState(state).items;
 export const getLastLoadedDocument = (state) => getQueryState(state).lastLoadedDocument;

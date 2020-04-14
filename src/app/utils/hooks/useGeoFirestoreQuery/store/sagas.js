@@ -10,24 +10,18 @@ import {
   setLoadError
 } from "utils/hooks/useGeoFirestoreQuery/store/actions";
 
-// Utils
-import { rsf } from "utils/firebase";
-
-
 // Helper functions
 const generateItemsFromResults = (results) => results.docs.map(doc => doc.data());
+const getCollectionAsync = async (query) => await query.get();
 
 
-function* initialLoadSaga({ payload: { query, pageSize } }) {
+function* load({ payload: { query, pageSize } }) {
   try {
     // Set isLoading flag to true
     yield put(setIsLoading(true));
 
     // Make query call
-    const results = yield call(
-      rsf.firestore.getCollection,
-      query.limit(pageSize)
-    );
+    const results = yield call(getCollectionAsync, query.limit(pageSize));
 
     // Iterate through results and get data to normalize output
     const items = yield call(generateItemsFromResults, results);
@@ -46,7 +40,7 @@ function* initialLoadSaga({ payload: { query, pageSize } }) {
 }
 
 function* watch() {
-  yield takeEvery(LOAD, initialLoadSaga);
+  yield takeEvery(LOAD, load);
 }
 
 export default watch;
