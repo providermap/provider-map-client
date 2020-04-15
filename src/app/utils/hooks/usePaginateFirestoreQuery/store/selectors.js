@@ -1,5 +1,6 @@
+// Selectors
+const getQueryState = (state) => state.paginateQuery;
 
-const getQueryState = (state) => state.query;
 export const getItems = (state) => getQueryState(state).items;
 export const getLastLoadedDocument = (state) => getQueryState(state).lastLoadedDocument;
 export const getIsLoading = (state) => getQueryState(state).isLoading;

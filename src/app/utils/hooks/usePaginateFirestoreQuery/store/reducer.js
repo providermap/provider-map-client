@@ -1,5 +1,12 @@
 // Actions
-import { INITIAL_LOAD_SUCCESS, LOAD_MORE_SUCCESS, SET_IS_LOADING, SET_IS_LOADING_MORE, SET_HAS_MORE, SET_LOAD_ERROR } from "store/query/actions";
+import {
+  INITIAL_LOAD_SUCCESS,
+  LOAD_MORE_SUCCESS,
+  SET_IS_LOADING,
+  SET_IS_LOADING_MORE,
+  SET_HAS_MORE,
+  SET_LOAD_ERROR
+} from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 
 const initialState = {

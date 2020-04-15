@@ -38,7 +38,7 @@ const configureStore = () => {
   // Create store object
   const store = createStore(rootReducer(history), storeEnhancers);
 
-  if (process.env.NODE_ENV !== "production" && module.hot) {
+  if (process.env.NODE_ENV === "DEV" && module.hot) {
     module.hot.accept("reducer", () => {
       console.log("Enabling Webpack HMR for reducers");
       store.replaceReducer(rootReducer);

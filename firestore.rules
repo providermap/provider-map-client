@@ -1,4 +1,5 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -18,6 +19,11 @@ service cloud.firestore {
 
     match /facilities_test/{testFacility} {
       allow read, write: if false;
+    }
+
+    match /facilities_geopoint/{facility} {
+      allow read: if true;
+      allow write: if false;
     }
 
   }

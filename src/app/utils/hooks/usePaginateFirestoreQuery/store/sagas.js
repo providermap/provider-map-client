@@ -2,13 +2,20 @@ import { takeEvery, put, call, select } from "redux-saga/effects";
 import { batchActions } from "redux-batched-actions";
 
 // Actions
-import { INITIAL_LOAD, LOAD_MORE } from "store/query/actions";
+import { INITIAL_LOAD, LOAD_MORE } from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 // Action Creators
-import { initialLoadSuccess, loadMoreSuccess, setIsLoading, setIsLoadingMore, setHasMore, setLoadError } from "store/query/actions";
+import {
+  initialLoadSuccess,
+  loadMoreSuccess,
+  setIsLoading,
+  setIsLoadingMore,
+  setHasMore,
+  setLoadError
+} from "utils/hooks/usePaginateFirestoreQuery/store/actions";
 
 // Selectors
-import { getLastLoadedDocument } from "store/query/selectors";
+import { getLastLoadedDocument } from "utils/hooks/usePaginateFirestoreQuery/store/selectors";
 
 // Utils
 import { rsf } from "utils/firebase";

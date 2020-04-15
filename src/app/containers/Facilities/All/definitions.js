@@ -1,5 +1,4 @@
 // Filter option arrays
-
 export const facilityTypes = [
   "All", "General Acute Care", "Temporary Facility", "Psychiatric", "Long Term Care", "Critical Access", "Military", "Postacute Care"
 ];

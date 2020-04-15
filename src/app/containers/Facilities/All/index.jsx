@@ -1,11 +1,11 @@
 import React, { memo, useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
-import Button from "@airbnb/lunar/lib/components/Button";
 import Select from "@airbnb/lunar/lib/components/Select";
 import { Container, Div, Row, Col } from "ui-kit/components";
 
@@ -14,26 +14,36 @@ import AddFacilityBanner from "containers/Facilities/All/components/AddFacilityB
 import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
 // Firestore DB
-import { db } from "utils/firebase";
+import { geofirestore } from "utils/firebase";
 
 // Hooks
-import usePaginatedFirestoreQuery from "utils/hooks/usePaginatedFirestoreQuery";
+import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
 
 // Definitions
 import { facilityTypes, traumaTypes } from "containers/Facilities/All/definitions";
 
+// Selectors
+import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
+
+// Facility pagination size
+const PAGE_SIZE = 20;
 
 const AllFacilities = () => {
+
+  // State values
+  const { latitude, longitude } = useSelector(getLocation);
+  const geoLocation = useSelector(getGeoLocation);
+  const areLocationServicesEnabled = useSelector(getAreLocationServicesEnabled);
 
   // Initialize useForm hook for control inputs and handleSubmit handler
   const { control, watch } = useForm();
 
   // Base collection query
-  let query = db.collection("facilities").orderBy("total_bed_count", "desc");
+  let query = geofirestore.collection("facilities_geopoint"); //.orderBy("total_bed_count", "desc");
 
   // Watch facility type select dropdown value
-  const facilityType = watch("facilityType");
-  const traumaType = watch("traumaType");
+  const facilityType = watch("facilityType") ?? null;
+  const traumaType = watch("traumaType") ?? null;
 
   // Check filter types to add to base query
   if (facilityType && facilityType !== "All") {
@@ -43,15 +53,15 @@ const AllFacilities = () => {
   if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
   }
+  if (areLocationServicesEnabled) {
+    query = query.near({ center: geoLocation, radius: 100, limit: PAGE_SIZE });
+  }
 
   const {
     items: facilities,
     isLoading,
-    isLoadingMore,
-    hasMore,
     error,
-    loadMoreResults
-  } = usePaginatedFirestoreQuery(query, 20, facilityType, traumaType);
+  } = useGeoFirestoreQuery(query, PAGE_SIZE, { facilityType, traumaType, latitude, longitude });
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
@@ -120,10 +130,6 @@ const AllFacilities = () => {
                   {/* Map through facilities and display facility cards */}
                   { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} facility={facility} /> )}
                 </AdaptiveGrid>
-
-                <Div display="flex" justifyContent="center" alignItems="center" paddingY="20px">
-                  { hasMore && <Button onClick={loadMoreResults} loading={isLoadingMore}>{ hasMore ? "More" : "All facilities loaded." }</Button> }
-                </Div>
               </Div>
             }
           </>
