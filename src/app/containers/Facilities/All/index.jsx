@@ -41,7 +41,7 @@ const AllFacilities = () => {
   const { control, watch } = useForm();
 
   // Base collection query
-  let query = geofirestore.collection(`${envPrefix}_facilities`); //.orderBy("total_bed_count", "desc");
+  let query = geofirestore.collection(`${envPrefix}_facilities`);
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType") ?? null;
@@ -51,6 +51,7 @@ const AllFacilities = () => {
   if (facilityType && facilityType !== "All") {
     query = query.where("type", "==", facilityType);
   }
+
   if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
   }
