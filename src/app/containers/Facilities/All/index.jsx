@@ -54,7 +54,7 @@ const AllFacilities = () => {
     query = query.where("trauma", "==", traumaType);
   }
   if (areLocationServicesEnabled) {
-    query = query.near({ center: geoLocation, radius: 100, limit: PAGE_SIZE });
+    query = query.near({ center: geoLocation, radius: 10, limit: PAGE_SIZE });
   }
 
   const {
@@ -89,12 +89,12 @@ const AllFacilities = () => {
 
             {/* Filters */}
             <Col md="4">
-              <Controller as={Select} control={control} name="facilityType" label="Facility Type" small>
+              <Controller as={Select} control={control} name="facilityType" label="Facility Type" disabled={isLoading} small>
                 { facilityTypes.map((facilityType) => <option key={facilityType} value={facilityType}>{ facilityType }</option>) }
               </Controller>
             </Col>
             <Col md="4">
-              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" small>
+              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" disabled={isLoading} small>
                 { traumaTypes.map((traumaType) => <option key={traumaType} value={traumaType}>{ traumaType }</option>) }
               </Controller>
             </Col>
