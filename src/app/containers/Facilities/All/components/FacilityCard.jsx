@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { push } from "connected-react-router";
+import isNil from "lodash/isNil";
 
 // Public components
 import Text from "@airbnb/lunar/lib/components/Text";
@@ -56,8 +57,14 @@ const FacilityCard = ({ facility }) => {
     // Short-circuit if user does not have location services enabled
     if (!areLocationServicesEnabled) return;
 
+    // Short-circuit if facility is missing location data
+    if (isNil(facilityLatitude) || isNil(facilityLongitude)) return;
+
     // Get distance (in miles) from user's current location to facility
-    return distanceCalculator(userLatitude, userLongitude, facilityLatitude, facilityLongitude);
+    const exactDistance = distanceCalculator(userLatitude, userLongitude, facilityLatitude, facilityLongitude);
+
+    // Return rounded distance in miles
+    return Math.round(exactDistance);
 
   }, [areLocationServicesEnabled, facilityLatitude, facilityLongitude, userLatitude, userLongitude]);
 
@@ -78,7 +85,7 @@ const FacilityCard = ({ facility }) => {
             <Text muted>{`${address}, ${city} ${state} ${zip}`}</Text>
 
             {/* If user's location services are enabled, show user's distance to facility */}
-            { areLocationServicesEnabled && <Text small>{`${distance} Miles Away`}</Text> }
+            { areLocationServicesEnabled && !isNil(distance) && <Text small>{`${distance} Miles Away`}</Text> }
 
           </Div>
 

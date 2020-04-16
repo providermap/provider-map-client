@@ -5,16 +5,16 @@ import InvalidParameterException from "utils/exceptions/InvalidParameterExceptio
 const distanceCalculator = (latitude1, longitude1, latitude2, longitude2)  => {
 
   // Validate function parameters
-  if (latitude1 < 0 || latitude1 > 90) {
+  if (latitude1 < -90 || latitude1 > 90) {
     throw new InvalidParameterException("Invalid value passed for argument 'latitude1'.");
   }
-  else if (latitude2 < 0 || latitude2 > 90) {
+  else if (latitude2 < -90 || latitude2 > 90) {
     throw new InvalidParameterException("Invalid value passed for argument 'latitude2'.");
   }
-  else if (longitude1 < 0 || longitude1 > 180) {
+  else if (longitude1 < -180 || longitude1 > 180) {
     throw new InvalidParameterException("Invalid value passed for argument 'longitude1'.");
   }
-  else if (longitude2 < 0 || longitude2 > 180) {
+  else if (longitude2 < -180 || longitude2 > 180) {
     throw new InvalidParameterException("Invalid value passed for argument 'longitude2'.");
   }
 
