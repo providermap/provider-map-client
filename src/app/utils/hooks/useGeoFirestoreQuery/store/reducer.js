@@ -1,18 +1,17 @@
 // Actions
-import {
-  LOAD_SUCCESS,
-  SET_IS_LOADING,
-  SET_LOAD_ERROR
-} from "utils/hooks/useGeoFirestoreQuery/store/actions";
+import { LOAD_SUCCESS, SET_IS_LOADING, SET_LOAD_ERROR } from "utils/hooks/useGeoFirestoreQuery/store/actions";
+
+// Utils
+import { resetReducer } from "utils/hooks/useResetReducerOnUnmount";
 
 
 const initialState = {
   items: [],
-  isLoading: true,
+  isLoading: false,
   error: null
 };
 
-export default (state = initialState, { type, payload }) => {
+const GeoFirestoreQueryReducer = (state = initialState, { type, payload }) => {
   switch (type) {
 
     case LOAD_SUCCESS: {
@@ -20,9 +19,7 @@ export default (state = initialState, { type, payload }) => {
 
       return {
         ...state,
-        items,
-        error: null,
-        isLoading: false
+        items
       };
     }
 
@@ -51,3 +48,7 @@ export default (state = initialState, { type, payload }) => {
 
   }
 }
+
+export const reducerName = "geoFirestoreQueryReducer";
+
+export default resetReducer(GeoFirestoreQueryReducer, reducerName);

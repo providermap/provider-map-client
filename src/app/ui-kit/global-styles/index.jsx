@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { createGlobalStyle } from "styled-components";
 
+
 // Global styles
 const GlobalStyle = createGlobalStyle`
   body {

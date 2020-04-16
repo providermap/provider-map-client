@@ -1,7 +1,12 @@
+// Utils
 import { db, geofirestore } from "utils/firebase";
 
+// Custom Exceptions
+import InvalidParameterException from "utils/exceptions/InvalidParameterException";
 
-// Base query class
+
+/*** Base Class ***/
+
 class FirestoreQuery {
 
   constructor(query) {
@@ -13,20 +18,17 @@ class FirestoreQuery {
 
     // Validate filter field name is valid
     if (!fieldName || typeof fieldName !== "string") {
-      console.error("Invalid firestorm collection field name.");
-      return
+      throw new InvalidParameterException("Invalid firestorm collection field name.");
     }
 
     // Validate filter comparison operator is valid
-    if (!["<", "<=", "==", ">=", ">", "array-contains", "in", "array-contains-any"].contains(comparisonOperator)) {
-      console.error("Invalid firestorm comparison operator.");
-      return;
+    if (!["<", "<=", "==", ">=", ">", "array-contains", "in", "array-contains-any"].includes(comparisonOperator)) {
+      throw new InvalidParameterException("Invalid firestorm comparison operator.");
     }
 
     // Validate filter value is value
     if (value === undefined) {
-      console.error("Invalid firestorm filter value.");
-      return;
+      throw new InvalidParameterException("Invalid firestorm filter value.");
     }
 
     // Add query result filter rule
@@ -36,21 +38,19 @@ class FirestoreQuery {
   AddPageSize = (pageSize = 20) => {
 
     // Validate page size
-    if (typeof pageSize !== "number") {
-      console.error("Invalid page size value.");
-      return;
+    if (typeof pageSize !== "number" || pageSize <= 0) {
+      throw new InvalidParameterException("Invalid page size value.");
     }
 
     // Add result size limit to query
     this.query = this.query.limit(pageSize);
   }
 
-  AddSortOrder =(fieldName, isDescending = false) => {
+  AddSortOrder = (fieldName, isDescending = false) => {
 
     // Validate filter field name is valid
     if (!fieldName || typeof fieldName !== "string") {
-      console.error("Invalid firestorm collection field name.");
-      return
+      throw new InvalidParameterException("Invalid firestorm collection field name.");
     }
 
     // Set query result order rule
@@ -66,9 +66,17 @@ class FirestoreQuery {
 
 }
 
+
+/*** Derived classes ***/
+
 export class PaginatedFirestoreQuery extends FirestoreQuery {
 
   constructor(collectionName) {
+
+    if (typeof collectionName !== "string") {
+      throw new InvalidParameterException("Invalid firestore collection name.");
+    }
+
     super(db.collection(collectionName));
   }
 
@@ -76,8 +84,7 @@ export class PaginatedFirestoreQuery extends FirestoreQuery {
 
     // Validate cursor value (cursor can be number or document)
     if (!cursor && cursor !== 0) {
-      console.error("Invalid pagination cursor value.");
-      return;
+      throw new InvalidParameterException("Invalid pagination cursor value.");
     }
 
     // Set pagination to start at cursor
@@ -88,8 +95,7 @@ export class PaginatedFirestoreQuery extends FirestoreQuery {
 
     // Validate cursor value (cursor can be number or document)
     if (!cursor && cursor !== 0) {
-      console.error("Invalid pagination cursor value.");
-      return;
+      throw new InvalidParameterException("Invalid pagination cursor value.");
     }
 
     // Set pagination to start after cursor
@@ -100,8 +106,7 @@ export class PaginatedFirestoreQuery extends FirestoreQuery {
 
     // Validate cursor value (cursor can be number or document)
     if (!cursor && cursor !== 0) {
-      console.error("Invalid pagination cursor value.");
-      return;
+      throw new InvalidParameterException("Invalid pagination cursor value.");
     }
 
     // Set pagination to end at cursor
@@ -112,8 +117,7 @@ export class PaginatedFirestoreQuery extends FirestoreQuery {
 
     // Validate cursor value (cursor can be number or document)
     if (!cursor && cursor !== 0) {
-      console.error("Invalid pagination cursor value.");
-      return;
+      throw new InvalidParameterException("Invalid pagination cursor value.");
     }
 
     // Set pagination to end before cursor
@@ -133,6 +137,11 @@ export class PaginatedFirestoreQuery extends FirestoreQuery {
 export class GeoFirestoreQuery extends FirestoreQuery {
 
   constructor(collectionName) {
+
+    if (typeof collectionName !== "string") {
+      throw new InvalidParameterException("Invalid firestore collection name.");
+    }
+
     super(geofirestore.collection(collectionName));
   }
 

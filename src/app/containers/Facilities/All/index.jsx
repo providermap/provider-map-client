@@ -19,7 +19,7 @@ import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
 
 // Definitions
-import { facilityTypes, traumaTypes, distanceOptions, DEFAULT_PAGE_SIZE } from "containers/Facilities/All/definitions";
+import { facilityTypes, traumaTypes, distanceOptions } from "containers/Facilities/All/definitions";
 
 // Collections
 import { facilitiesCollection } from "utils/collections";
@@ -28,7 +28,7 @@ import { facilitiesCollection } from "utils/collections";
 import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
 
 // Query Classes
-import { PaginatedFirestoreQuery, GeoFirestoreQuery } from "utils/QueryBuilder";
+import { GeoFirestoreQuery } from "utils/QueryBuilder";
 
 
 const AllFacilities = () => {
@@ -54,42 +54,45 @@ const AllFacilities = () => {
     // If location services are enabled, use a geo firestore query
     if (areLocationServicesEnabled) {
       firestoreQuery = new GeoFirestoreQuery(facilitiesCollection);
-    }
-    else {
-      // If location services are not enabled, use a basic firestore query
-      firestoreQuery = new PaginatedFirestoreQuery(facilitiesCollection);
-    }
 
-    // Add applied filters to query
-    if (facilityType && facilityType !== "All") {
-      firestoreQuery.AddFilter("type", "==", facilityType);
-    }
+      // Add applied filters to query
+      if (facilityType && facilityType !== "All") {
+        firestoreQuery.AddFilter("type", "==", facilityType);
+      }
 
-    if (traumaType && traumaType !== "All") {
-      firestoreQuery.AddFilter("trauma", "==", traumaType);
-    }
+      if (traumaType && traumaType !== "All") {
+        firestoreQuery.AddFilter("trauma", "==", traumaType);
+      }
 
-    if (areLocationServicesEnabled && distanceFromCurrentLocation) {
-      // Add distance filter if we are using a geo query
-      firestoreQuery.AddDistanceFilter(geoLocation, Number(distanceFromCurrentLocation));
-    }
-    else {
-      // Add pagination page size if we are using a normal firestore query
-      firestoreQuery.AddPageSize(DEFAULT_PAGE_SIZE);
+      if (areLocationServicesEnabled && distanceFromCurrentLocation) {
+        // Add distance filter if we are using a geo query
+        firestoreQuery.AddDistanceFilter(geoLocation, Number(distanceFromCurrentLocation));
+      }
     }
 
     return firestoreQuery;
 
   }, [areLocationServicesEnabled, facilityType, traumaType, distanceFromCurrentLocation]);
 
+  // Check if facility data can be loaded with applied filters
+  const shouldLoadData = useMemo(() => !!(areLocationServicesEnabled && distanceFromCurrentLocation), [areLocationServicesEnabled, distanceFromCurrentLocation]);
+
   // Perform query
-  const { items: facilities, isLoading, error, } = useGeoFirestoreQuery(query, { facilityType, traumaType, distanceFromCurrentLocation, latitude, longitude });
+  const { items: facilities, isLoading, error } = useGeoFirestoreQuery(query, shouldLoadData, { facilityType, traumaType, distanceFromCurrentLocation, latitude, longitude });
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
 
   // Show loader flag
   const showLoader = useMemo(() => (isLoading || error), [isLoading, error]);
+
+  // Has location enabled or has typed zip code
+  const hasLocationFromBrowserOrZip = useMemo(() => {
+
+    // TODO: Include zip code logic
+    return areLocationServicesEnabled;
+
+  }, [areLocationServicesEnabled]);
 
   return (
     <Container paddingBottom="10px">
@@ -102,7 +105,7 @@ const AllFacilities = () => {
           <Row>
 
             {/* Facilities Count */}
-            <Col md="4" display="flex" alignItems="flex-end">
+            <Col md="4" display="flex" alignItems="flex-start" justifyContent="flex-start">
               <Div display="flex" alignItems="center">
                 <Div fontSize="26px" paddingRight="10px">Facilities</Div>
                 <Text>({facilities?.length})</Text>
@@ -110,35 +113,30 @@ const AllFacilities = () => {
             </Col>
 
             {/* Filters */}
-            <Col md="4">
+            <Col md="4" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }} _md={{ marginTop: "0px" }}>
 
               {/* Facility Type Select Input */}
-              <Controller as={Select} control={control} name="facilityType" label="Facility Type" disabled={isLoading} small>
+              <Controller as={Select} control={control} name="facilityType" label="Facility Type" disabled={isLoading || !hasLocationFromBrowserOrZip} small>
                 { facilityTypes.map((facilityType) => <option key={facilityType} value={facilityType}>{ facilityType }</option>) }
               </Controller>
 
             </Col>
-            <Col md="4">
+            <Col md="4" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }} _md={{ marginTop: "0px" }}>
 
               {/* Trauma Type Select Input */}
-              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" disabled={isLoading} small>
+              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" disabled={isLoading || !hasLocationFromBrowserOrZip} small>
                 { traumaTypes.map((traumaType) => <option key={traumaType} value={traumaType}>{ traumaType }</option>) }
               </Controller>
 
             </Col>
+            <Col _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }} _md={{ marginTop: "0px" }}>
 
-            {/* Only show distance search if user we can get user location */}
-            { areLocationServicesEnabled &&
-              <Col>
+              {/* Distance search option */}
+              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading || !hasLocationFromBrowserOrZip} defaultValue={"5"} small>
+                { distanceOptions.map((distanceValue) => <option key={distanceValue} value={distanceValue}>{ distanceValue }</option>) }
+              </Controller>
 
-                {/* Distance search option */}
-                <Controller as={Select} control={control} name="distance" label="Search Distance" disabled={isLoading} defaultValue={"5"} small>
-                  { distanceOptions.map((distanceValue) => <option key={distanceValue} value={distanceValue}>{ distanceValue }</option>) }
-                </Controller>
-
-              </Col>
-            }
-
+            </Col>
           </Row>
         </Div>
 
@@ -154,13 +152,20 @@ const AllFacilities = () => {
           />
         }
 
-        { !isLoading &&
+        { !hasLocationFromBrowserOrZip &&
+          <Div height="400px" display="flex" alignItems="center" justifyContent="center" paddingY="30px" textAlign="center">
+            {/* Make this look better */}
+            <Text bold>To search for nearby facilities, please input ZIP Code or enable browser location services.</Text>
+          </Div>
+        }
+
+        { hasLocationFromBrowserOrZip && !isLoading &&
           <>
             {/* Display null state for no facilities */}
             { !hasFacilities &&
-              <Div height="400px" display="flex" alignItems="center" justifyContent="center" paddingY="30px">
+              <Div height="400px" display="flex" alignItems="center" justifyContent="center" paddingY="30px" textAlign="center">
                 {/* Make this look better */}
-                <Text>No Facilities. Please come back later.</Text>
+                <Text bold>No facilities found based on your search criteria.</Text>
               </Div>
             }
 

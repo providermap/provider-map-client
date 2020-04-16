@@ -2,7 +2,7 @@ import { createAction } from "redux-actions";
 
 
 export const LOAD = "GEO_FIRESTORE_QUERY/LOAD";
-export const load = (query, pageSize) => createAction(LOAD)({ query, pageSize });
+export const load = (query) => createAction(LOAD)({ query });
 
 export const LOAD_SUCCESS = "GEO_FIRESTORE_QUERY/LOAD_SUCCESS";
 export const loadSuccess = (items) => createAction(LOAD_SUCCESS)({ items });

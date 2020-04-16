@@ -28,10 +28,10 @@ const LocationProvider = () => {
 
   }, [latitude, longitude, error]);
 
-  // Wait 3 seconds before allowing error banner to show (this gives the browser a chance to fetch user location)
+  // Wait 2 seconds before allowing error banner to show (this gives the browser a chance to fetch user location)
   const [ canShowBanner, setCanShowBanner ] = useState(false);
 
-  useEffect(() => void setTimeout(() => void setCanShowBanner(true), 3000), []);
+  useEffect(() => void setTimeout(() => void setCanShowBanner(true), 2000), []);
 
   // Check if banner has been dismissed
   const [ hasBannerBeenDismissed, setHasBannerBeenDismissed ] = useState(false);

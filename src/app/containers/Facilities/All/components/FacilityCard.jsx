@@ -110,15 +110,15 @@ const FacilityCard = ({ facility }) => {
 
         <Container _lg={{ minHeight: "140px" }} _xl={{ minHeight: "120px" }} fluid>
           <Row>
-            <Col col={4}>
+            <Col col="4">
               <Term label="Telephone">{ telephone || "--"}</Term>
             </Col>
 
-            <Col col={4}>
+            <Col col="4">
               <Term label="Beds">{ total_bed_count || licensed_bed_count || "--" }</Term>
             </Col>
 
-            <Col col={4}>
+            <Col col="4">
               <Term label="Ventilator Count">{ ventilator_count || "--" }</Term>
             </Col>
           </Row>

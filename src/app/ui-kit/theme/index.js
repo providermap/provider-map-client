@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { ThemeProvider } from "styled-components";
 import applyGroove from "styled-groove";
 
@@ -19,4 +19,4 @@ const Theme = ({ children }) => (
   </ThemeProvider>
 );
 
-export default Theme;
+export default memo(Theme);
