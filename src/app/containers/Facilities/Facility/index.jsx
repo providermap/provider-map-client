@@ -13,7 +13,7 @@ import { Div, Container, Row, Col } from "ui-kit/components";
 
 // Utils
 import { db } from "utils/firebase";
-import { env } from "utils/environment";
+import { envPrefix } from "utils/environment";
 
 
 const Facility = () => {
@@ -27,7 +27,7 @@ const Facility = () => {
   // Function to send user back to facilities page
   const pushToFacilities = useCallback(() => push(`/facility/all`), []);
 
-  const query = db.collection(`${env}_facilities`).where("provider_id", "==", Number(providerId));
+  const query = db.collection(`${envPrefix}_facilities`).where("provider_id", "==", Number(providerId));
 
   const [ data, loading, error ] = useCollectionData(query);
   // Get first item of data array

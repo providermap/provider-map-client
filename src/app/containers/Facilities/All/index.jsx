@@ -15,7 +15,7 @@ import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
 // Utils
 import { geofirestore } from "utils/firebase";
-import { env } from "utils/environment";
+import { envPrefix } from "utils/environment";
 
 // Hooks
 import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
@@ -40,7 +40,7 @@ const AllFacilities = () => {
   const { control, watch } = useForm();
 
   // Base collection query
-  let query = geofirestore.collection(`${env}_facilities`); //.orderBy("total_bed_count", "desc");
+  let query = geofirestore.collection(`${envPrefix}_facilities`); //.orderBy("total_bed_count", "desc");
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType") ?? null;

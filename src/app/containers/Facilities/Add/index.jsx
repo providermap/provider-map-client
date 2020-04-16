@@ -15,7 +15,7 @@ import { Container, Form, Row, Col, Div } from "ui-kit/components";
 
 // Utils
 import { db } from "utils/firebase";
-import { env } from "utils/environment";
+import { envPrefix } from "utils/environment";
 
 
 // Styled component
@@ -99,7 +99,7 @@ const AddFacility = () => {
       };
 
       // Add facility document to collection
-      await db.collection(`${env}_facilities_submission`).add(document);
+      await db.collection(`${envPrefix}_facilities_submission`).add(document);
 
       // Display success toast if submission is successful
       setToastWithResetTimeout({
