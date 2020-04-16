@@ -17,7 +17,7 @@ const presets =  [
   }],
 ];
 
-if (process.env.NODE_ENV === "dev") {
+if (process.env.NODE_ENV !== "production") {
   // only add this when in development
   plugins.push("react-hot-loader/babel");
 }

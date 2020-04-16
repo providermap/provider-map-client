@@ -4,9 +4,9 @@
   "description": "description",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=dev webpack-dev-server --config webpack.dev.js --open --watch --hot",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --config webpack.dev.js --open --watch --hot",
     "build": "webpack --config webpack.dev.js --display-error-details",
-    "build-prod": "cross-env NODE_ENV=prod webpack --config webpack.prod.js"
+    "build-prod": "cross-env NODE_ENV=production webpack --config webpack.prod.js"
   },
   "private": true,
   "author": "Templum Digital",
