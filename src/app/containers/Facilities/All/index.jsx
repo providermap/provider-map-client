@@ -54,7 +54,7 @@ const AllFacilities = () => {
     query = query.where("trauma", "==", traumaType);
   }
   if (areLocationServicesEnabled) {
-    query = query.near({ center: geoLocation, radius: 100, limit: PAGE_SIZE });
+    query = query.near({ center: geoLocation, radius: 10, limit: PAGE_SIZE });
   }
 
   const {

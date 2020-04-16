@@ -30,6 +30,7 @@ const Facility = () => {
   const query = db.collection(`${envPrefix}_facilities`).where("provider_id", "==", Number(providerId));
 
   const [ data, loading, error ] = useCollectionData(query);
+
   // Get first item of data array
   const facility = data?.shift();
 

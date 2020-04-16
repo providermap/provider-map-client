@@ -14,7 +14,7 @@ const AddFacilityBanner = () => {
   const { push } = useHistory();
 
   // Create push function to navigate user to new facility page
-  const pushToAddFacility = useCallback(() => push("/facility/add"), []);
+  const pushToAddFacility = useCallback(() => push("/facility/add"), [push]);
 
   return (
     <Card>
