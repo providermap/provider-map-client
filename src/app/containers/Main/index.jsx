@@ -12,7 +12,6 @@ import Navigation from "containers/Main/components/Navigation";
 const history = createBrowserHistory();
 
 // Containers
-import LocationProvider from "containers/LocationProvider";
 import Facilities from "containers/Facilities";
 
 
@@ -20,7 +19,6 @@ const Main = () => (
   <Div width="100%">
     <Router history={history}>
       <Navigation />
-      <LocationProvider />
       <Switch>
         <Route path="/facility" component={Facilities} />
         <Redirect to="/facility" />

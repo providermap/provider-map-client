@@ -21,7 +21,8 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         items,
-        error: null
+        error: null,
+        isLoading: false
       };
     }
 
@@ -40,7 +41,8 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         items: [],
-        error
+        error,
+        isLoading: false
       };
     }
 
