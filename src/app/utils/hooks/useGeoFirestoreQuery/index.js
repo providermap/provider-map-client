@@ -24,7 +24,7 @@ const useGeoFirestoreQuery = (query, pageSize = 20, filters) => {
   return {
     items,
     isLoading,
-    error,
+    error
   };
 }
 

@@ -40,8 +40,8 @@ const Facility = () => {
       error={error}
       errorTitle="Please try again later. We apologize for the inconvenience."
       fetched={!loading && !!facility}
-      failureText="Failed to load facility."
-      loadingText="Loading facility.">
+      failureText="Failed to load facilities."
+      loadingText="Loading Facilities">
 
       <Layout minHeight="360px" fluid>
         <Container paddingTop="10px">

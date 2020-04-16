@@ -26,7 +26,8 @@ import { facilityTypes, traumaTypes } from "containers/Facilities/All/definition
 // Selectors
 import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
 
-// Constants
+
+// Facility pagination size
 const PAGE_SIZE = 20;
 
 const AllFacilities = () => {
@@ -53,6 +54,7 @@ const AllFacilities = () => {
   if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
   }
+
   if (areLocationServicesEnabled) {
     query = query.near({ center: geoLocation, radius: 10, limit: PAGE_SIZE });
   }
@@ -126,7 +128,7 @@ const AllFacilities = () => {
             {/* Display facilities if they exist */}
             { hasFacilities &&
               <Div>
-                <AdaptiveGrid defaultItemsPerRow={2}>
+                <AdaptiveGrid defaultItemsPerRow={1} breakpoints={{ "992": 2 }}>
                   {/* Map through facilities and display facility cards */}
                   { facilities?.map((facility) => <FacilityCard key={facility?.provider_id} facility={facility} /> )}
                 </AdaptiveGrid>
