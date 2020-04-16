@@ -1,6 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 
 
+// Set config options for location watcher (configured for high accuracy assuming user isn't moving)
+const watchPositionConfig = {
+  enableHighAccuracy: true,
+  timeout: 0,
+  maximumAge: 60000
+};
+
 const useGeolocation = () => {
 
   // State management
@@ -38,7 +45,7 @@ const useGeolocation = () => {
     }
 
     // Set up a location watcher that performs a callback on location changes (caused by physical movement or increase in accuracy)
-    const watchID = geo.watchPosition(onLocationUpdate, onError);
+    const watchID = geo.watchPosition(onLocationUpdate, onError, watchPositionConfig);
 
     // On component unmount, clear watcher
     return () => geo.clearWatch(watchID);

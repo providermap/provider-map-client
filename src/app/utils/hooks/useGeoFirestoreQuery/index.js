@@ -9,12 +9,12 @@ import { load } from "utils/hooks/useGeoFirestoreQuery/store/actions";
 import { getItems, getIsLoading, getError } from "utils/hooks/useGeoFirestoreQuery/store/selectors";
 
 
-const useGeoFirestoreQuery = (query, pageSize = 20, filters = null) => {
+const useGeoFirestoreQuery = (query, filters = null) => {
 
   const dispatch = useDispatch();
 
   // Load initial query documents when filters change (use md5 hash to tell when filters have changed)
-  useEffect(() => void dispatch(load(query, pageSize)), [md5(JSON.stringify(filters))]);
+  useEffect(() => void dispatch(load(query)), [md5(JSON.stringify(filters))]);
 
   // Get values from redux store
   const items = useSelector(getItems);

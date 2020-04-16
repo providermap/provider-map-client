@@ -10,21 +10,14 @@ import {
   setLoadError
 } from "utils/hooks/useGeoFirestoreQuery/store/actions";
 
-// Helper functions
-const generateItemsFromResultsSortedByDistance = (results) => results.docs.sort((a, b) => a.distance - b.distance).map(doc => doc.data());
-const getCollectionAsync = async (query) => await query.get();
 
-
-function* load({ payload: { query, pageSize } }) {
+function* load({ payload: { query } }) {
   try {
     // Set isLoading flag to true
     yield put(setIsLoading(true));
 
     // Make query call
-    const results = yield call(getCollectionAsync, query.limit(pageSize));
-
-    // Iterate through results and get data to normalize output
-    const items = yield call(generateItemsFromResultsSortedByDistance, results);
+    const items = yield call(query.GetQueryDocuments);
 
     // Save loaded items in redux store
     yield put(loadSuccess(items));
