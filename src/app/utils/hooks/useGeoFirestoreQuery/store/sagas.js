@@ -20,7 +20,6 @@ function* load({ payload: { query, pageSize } }) {
     // Set isLoading flag to true
     yield put(setIsLoading(true));
 
-
     // Make query call
     const results = yield call(getCollectionAsync, query.limit(pageSize));
 
