@@ -3,7 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /_facilities/{facility} {
+    match /facilities/{facility} {
       allow read: if true;
       allow write: if false;
     }
@@ -24,7 +24,8 @@ service cloud.firestore {
     }
 
     match /dev_facilities/{devFacility} {
-      allow read, write: if false;
+      allow read: if true;
+      allow write: if false;
     }
 
     match /dev_facilities_submission/{submittedFacility} {
