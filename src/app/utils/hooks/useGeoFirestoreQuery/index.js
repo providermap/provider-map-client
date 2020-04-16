@@ -23,9 +23,11 @@ const useGeoFirestoreQuery = (query, shouldLoadData = true, filters = null) => {
 
   // Load initial query documents when filters change (use md5 hash to tell when filters have changed)
   useEffect(() => {
+
     if (shouldLoadData) {
       dispatch(load(query));
     }
+
   }, [md5(JSON.stringify(filters))]);
 
   // Get values from redux store

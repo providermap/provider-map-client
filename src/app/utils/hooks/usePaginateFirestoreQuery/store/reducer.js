@@ -1,12 +1,8 @@
 // Actions
-import {
-  INITIAL_LOAD_SUCCESS,
-  LOAD_MORE_SUCCESS,
-  SET_IS_LOADING,
-  SET_IS_LOADING_MORE,
-  SET_HAS_MORE,
-  SET_LOAD_ERROR
-} from "utils/hooks/usePaginateFirestoreQuery/store/actions";
+import { INITIAL_LOAD_SUCCESS, LOAD_MORE_SUCCESS, SET_IS_LOADING, SET_IS_LOADING_MORE, SET_HAS_MORE, SET_LOAD_ERROR } from "utils/hooks/usePaginateFirestoreQuery/store/actions";
+
+// Utils
+import { resetReducer } from "utils/hooks/useResetReducerOnUnmount";
 
 
 const initialState = {
@@ -18,7 +14,7 @@ const initialState = {
   error: null
 };
 
-export default (state = initialState, { type, payload }) => {
+const PaginatedFirestoreQueryReducer = (state = initialState, { type, payload }) => {
   switch (type) {
 
     case INITIAL_LOAD_SUCCESS: {
@@ -88,3 +84,7 @@ export default (state = initialState, { type, payload }) => {
 
   }
 }
+
+export const reducerName = "PaginatedFirestoreQueryReducer";
+
+export default resetReducer(PaginatedFirestoreQueryReducer, reducerName);

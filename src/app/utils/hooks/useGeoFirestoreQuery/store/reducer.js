@@ -49,6 +49,6 @@ const GeoFirestoreQueryReducer = (state = initialState, { type, payload }) => {
   }
 }
 
-export const reducerName = "geoFirestoreQueryReducer";
+export const reducerName = "GeoFirestoreQueryReducer";
 
 export default resetReducer(GeoFirestoreQueryReducer, reducerName);
