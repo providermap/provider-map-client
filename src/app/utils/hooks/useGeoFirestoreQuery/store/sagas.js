@@ -33,10 +33,6 @@ function* load({ payload: { query, pageSize } }) {
     // Handle query error
     yield put(setLoadError(error));
   }
-  finally {
-    // Set isLoading flag to false
-    yield put(setIsLoading(false));
-  }
 }
 
 function* watch() {

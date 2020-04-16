@@ -2,15 +2,17 @@ import React, { memo, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 
-// Public components
+// UI-Kit
 import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Select from "@airbnb/lunar/lib/components/Select";
 import { Container, Div, Row, Col } from "ui-kit/components";
 
+// Public components
+import LocationProvider from "containers/LocationProvider";
+
 // Private components
-import AddFacilityBanner from "containers/Facilities/All/components/AddFacilityBanner";
 import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
 // Utils
@@ -73,12 +75,12 @@ const AllFacilities = () => {
   const showLoader = useMemo(() => (isLoading || error), [isLoading, error]);
 
   return (
-    <Container paddingY="20px">
+    <Container paddingBottom="10px">
 
-      {/* Display banner about adding new facilities */}
-      <AddFacilityBanner/>
+      {/* Display location services banner */}
+      <LocationProvider />
 
-      <Div paddingY="20px">
+      <Div paddingY="30px">
         <Div paddingBottom="20px" paddingLeft="10px">
           <Row>
 

@@ -41,7 +41,7 @@ const configureStore = () => {
   if (process.env.NODE_ENV !== "production" && module.hot) {
     module.hot.accept("reducer", () => {
       console.log("Enabling Webpack HMR for reducers");
-      store.replaceReducer(rootReducer);
+      store.replaceReducer(rootReducer(history));
     });
   }
 
