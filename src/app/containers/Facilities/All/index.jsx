@@ -13,8 +13,9 @@ import { Container, Div, Row, Col } from "ui-kit/components";
 import AddFacilityBanner from "containers/Facilities/All/components/AddFacilityBanner";
 import FacilityCard from "containers/Facilities/All/components/FacilityCard";
 
-// Firestore DB
+// Utils
 import { geofirestore } from "utils/firebase";
+import { env } from "utils/environment";
 
 // Hooks
 import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
@@ -25,7 +26,7 @@ import { facilityTypes, traumaTypes } from "containers/Facilities/All/definition
 // Selectors
 import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
 
-// Facility pagination size
+// Constants
 const PAGE_SIZE = 20;
 
 const AllFacilities = () => {
@@ -39,7 +40,7 @@ const AllFacilities = () => {
   const { control, watch } = useForm();
 
   // Base collection query
-  let query = geofirestore.collection("facilities_geopoint"); //.orderBy("total_bed_count", "desc");
+  let query = geofirestore.collection(`${env}_facilities`); //.orderBy("total_bed_count", "desc");
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType") ?? null;
@@ -49,7 +50,6 @@ const AllFacilities = () => {
   if (facilityType && facilityType !== "All") {
     query = query.where("type", "==", facilityType);
   }
-
   if (traumaType && traumaType !== "All") {
     query = query.where("trauma", "==", traumaType);
   }

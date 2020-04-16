@@ -13,8 +13,9 @@ import RadioButtonController from "@airbnb/lunar/lib/components/RadioButtonContr
 import Select from "@airbnb/lunar/lib/components/Select";
 import { Container, Form, Row, Col, Div } from "ui-kit/components";
 
-// Firestore DB
+// Utils
 import { db } from "utils/firebase";
+import { env } from "utils/environment";
 
 
 // Styled component
@@ -98,7 +99,7 @@ const AddFacility = () => {
       };
 
       // Add facility document to collection
-      await db.collection("facilities_submission").add(document);
+      await db.collection(`${env}_facilities_submission`).add(document);
 
       // Display success toast if submission is successful
       setToastWithResetTimeout({
