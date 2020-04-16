@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { push } from "connected-react-router";
+import { useSelector } from "react-redux";
 import isNil from "lodash/isNil";
 
 // Public components
@@ -18,6 +17,7 @@ import { getAreLocationServicesEnabled, getLocation } from "containers/LocationP
 // Utils
 import timeAgo from "utils/timeAgo";
 import distanceCalculator from "utils/distanceCalculator";
+import { useHistory } from "react-router-dom";
 
 
 const FacilityCard = ({ facility }) => {
@@ -44,7 +44,7 @@ const FacilityCard = ({ facility }) => {
     longitude: facilityLongitude
   } = facility;
 
-  const dispatch = useDispatch();
+  const { push } = useHistory();
 
   // Get values from redux store
   const areLocationServicesEnabled = useSelector(getAreLocationServicesEnabled);
@@ -69,7 +69,7 @@ const FacilityCard = ({ facility }) => {
   }, [areLocationServicesEnabled, facilityLatitude, facilityLongitude, userLatitude, userLongitude]);
 
   // Click handler to push user to facility specific page
-  const pushToFacility = useCallback(() => void dispatch(push(`/facility/provider/${provider_id}`)), [provider_id]);
+  const pushToFacility = useCallback(() => push(`/facility/provider/${provider_id}`), [provider_id]);
 
   // Click handler to stop event propagation
   const stopPropagation = useCallback((event) => event.stopPropagation(), []);

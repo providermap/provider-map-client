@@ -9,7 +9,7 @@ import { load } from "utils/hooks/useGeoFirestoreQuery/store/actions";
 import { getItems, getIsLoading, getError } from "utils/hooks/useGeoFirestoreQuery/store/selectors";
 
 
-const useGeoFirestoreQuery = (query, pageSize = 20, filters) => {
+const useGeoFirestoreQuery = (query, pageSize = 20, filters = null) => {
 
   const dispatch = useDispatch();
 

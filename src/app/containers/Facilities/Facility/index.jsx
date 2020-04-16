@@ -1,6 +1,5 @@
 import React, { useCallback } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 
 // Components
 import Text from "@airbnb/lunar/lib/components/Text";
@@ -12,8 +11,11 @@ import Link from "@airbnb/lunar/lib/components/Link";
 import { Div, Container, Row, Col } from "ui-kit/components";
 
 // Utils
-import { db } from "utils/firebase";
+import { geofirestore } from "utils/firebase";
 import { envPrefix } from "utils/environment";
+
+// Hooks
+import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
 
 
 const Facility = () => {
@@ -25,21 +27,23 @@ const Facility = () => {
   const { push } = useHistory();
 
   // Function to send user back to facilities page
-  const pushToFacilities = useCallback(() => push(`/facility/all`), []);
+  const pushToFacilities = useCallback(() => push(`/facility/all`), [push]);
 
-  const query = db.collection(`${envPrefix}_facilities`).where("provider_id", "==", Number(providerId));
+  // Create query to get facility by providerId
+  const query = geofirestore.collection(`${envPrefix}_facilities`).where("provider_id", "==", Number(providerId));
 
-  const [ data, loading, error ] = useCollectionData(query);
+  // Get document by providerId
+  const { items, isLoading, error } = useGeoFirestoreQuery(query, 1);
 
   // Get first item of data array
-  const facility = data?.shift();
+  const facility = items?.shift();
 
   return (
     <AppLoader
       centered
       error={error}
       errorTitle="Please try again later. We apologize for the inconvenience."
-      fetched={!loading && !!facility}
+      fetched={!isLoading}
       failureText="Failed to load facilities."
       loadingText="Loading Facilities">
 
