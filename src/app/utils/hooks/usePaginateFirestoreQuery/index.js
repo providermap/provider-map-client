@@ -8,13 +8,27 @@ import { initialLoad, loadMore } from "utils/hooks/usePaginateFirestoreQuery/sto
 // Selectors
 import { getItems, getIsLoading, getIsLoadingMore, getHasMore, getError } from "utils/hooks/usePaginateFirestoreQuery/store/selectors";
 
+// Hooks
+import useResetReducerOnUnmount from "utils/hooks/useResetReducerOnUnmount";
 
-const usePaginatedFirestoreQuery = (query, pageSize = 20, filters) => {
+// Reducer Name
+import { reducerName } from "utils/hooks/usePaginateFirestoreQuery/store/reducer";
+
+
+const usePaginatedFirestoreQuery = (query, pageSize = 20, shouldLoadData = true, filters = null) => {
+
+  useResetReducerOnUnmount(reducerName);
 
   const dispatch = useDispatch();
 
   // Load initial query documents when filters change (use md5 hash to tell when filters have changed)
-  useEffect(() => void dispatch(initialLoad(query, pageSize)), [md5(JSON.stringify(filters))]);
+  useEffect(() => {
+
+    if (shouldLoadData) {
+      dispatch(initialLoad(query, pageSize));
+    }
+
+  }, [md5(JSON.stringify(filters))]);
 
   // Get values from redux store
   const items = useSelector(getItems);

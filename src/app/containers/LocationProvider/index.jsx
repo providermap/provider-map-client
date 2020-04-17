@@ -24,7 +24,7 @@ const LocationProvider = () => {
     // If location coordinates or error state have not changed, don't update values in redux store
     if (!latitude && !longitude && !error) return;
 
-    dispatch(updateUserLocation(latitude, longitude, error))
+    dispatch(updateUserLocation(latitude, longitude, error));
 
   }, [latitude, longitude, error]);
 

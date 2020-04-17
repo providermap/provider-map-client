@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { createBrowserHistory } from "history";
 import { Router, Route, Redirect, Switch } from "react-router";
 
@@ -27,4 +27,4 @@ const Main = () => (
   </Div>
 );
 
-export default Main;
+export default memo(Main);
