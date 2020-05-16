@@ -259,7 +259,7 @@ const AddFacility = () => {
 
 
                 <Col>
-                  <Div  marginY="20px">
+                  <Div marginY="20px">
                     <Button type="submit">Submit</Button>
                   </Div>
                 </Col>
