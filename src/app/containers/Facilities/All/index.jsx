@@ -133,7 +133,7 @@ const AllFacilities = () => {
           <Row>
 
             {/* Facilities Count */}
-            <Col md="4" display="flex" alignItems="flex-start" justifyContent="flex-start">
+            <Col md="4" display="flex" alignItems="center" justifyContent="flex-start">
               <Div display="flex" alignItems="center">
                 <Div fontSize="26px" paddingRight="10px">Facilities</Div>
                 <Text>({facilities?.length})</Text>
