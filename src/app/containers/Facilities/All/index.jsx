@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { useEffect, memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { firestore } from "firebase/app";
@@ -20,9 +20,11 @@ import LocationProvider from "containers/LocationProvider";
 
 // Private components
 import FacilityCard from "containers/Facilities/All/components/FacilityCard";
+import StartChecklistBanner from "containers/Facilities/All/components/StartChecklistBanner";
 
 // Hooks
 import useGeoFirestoreQuery from "utils/hooks/useGeoFirestoreQuery";
+import useRouterQueryParams from "utils/hooks/useRouterQueryParams";
 
 // Definitions
 import { facilityTypes, traumaTypes, distanceOptions } from "containers/Facilities/All/definitions";
@@ -44,13 +46,32 @@ const ValidationSchema = yup.object().shape({
 
 const AllFacilities = () => {
 
+  // Get query params to check for default query values
+  const queryParams = useRouterQueryParams();
+
+  // On initial mount check if zip is provided via url query param and use it
+  useEffect(() => {
+    const zipQueryParam = queryParams.get("zip");
+
+    // Use zip query param if available
+    if (zipQueryParam && zipQueryParam !== zip) {
+      setZipCoordinatesFromZip(zipQueryParam);
+    }
+  }, []);
+
   // State values
-  const [ { zipLatitude, zipLongitude }, setZipCoordinates ] = useState({});
+  const [ { zip,  zipLatitude, zipLongitude }, setZipCoordinates ] = useState({});
+  const setZipCoordinatesFromZip = (zip) => {
+    // Lookup zip code
+    const zipLocation = zipcodes.lookup(zip);
+
+    // Set zip latitude and longitude
+    setZipCoordinates({ zip, zipLatitude: zipLocation?.latitude, zipLongitude: zipLocation?.longitude });
+  }
   const geoZipLocation = useMemo(
     () => (zipLatitude && zipLongitude) ? new firestore.GeoPoint(zipLatitude, zipLongitude) : null,
     [zipLatitude, zipLongitude]
   );
-  console.log("AllFacilities -> geoZipLocation", geoZipLocation)
 
   // Store values
   const geoLocation = useSelector(getGeoLocation);
@@ -59,25 +80,18 @@ const AllFacilities = () => {
   const { control, watch, handleSubmit, errors } = useForm({ validationSchema: ValidationSchema });
 
   // Set zip code in state on form submit
-  const onSubmit = ({ zip }) => {
-    // Lookup zip code
-    const zipLocation = zipcodes.lookup(zip);
+  const onSubmit = ({ zip }) => void setZipCoordinatesFromZip(zip);
 
-    // Set zip latitude and longitude
-    setZipCoordinates({ zipLatitude: zipLocation?.latitude, zipLongitude: zipLocation?.longitude });
-  }
-
-  // Watch facility type select dropdown value
+  // Watch facility, trauma and distance from location type select dropdown value
   const facilityType = watch("facilityType") ?? null;
   const traumaType = watch("traumaType") ?? null;
-  const distanceFromCurrentLocation = watch("distance") ?? null;
+  const distanceFromLocation = watch("distance") ?? null;
 
   // Flag to determine if facilities are ready to load (location lat & long are available)
   const isLocationAvailable = useMemo(
-    () => ((!!geoLocation || !!geoZipLocation) && !!distanceFromCurrentLocation),
-    [geoLocation, geoZipLocation, distanceFromCurrentLocation]
+    () => ((!!geoLocation || !!geoZipLocation) && !!distanceFromLocation),
+    [geoLocation, geoZipLocation, distanceFromLocation]
   );
-  console.log("isLocationAvailable", isLocationAvailable)
 
   const query = useMemo(() => {
 
@@ -98,12 +112,12 @@ const AllFacilities = () => {
       }
 
       // Add distance filter if we are using a geo query (filter by zip first, otherwise use geo from location services)
-      firestoreQuery.AddDistanceFilter((geoZipLocation || geoLocation), Number(distanceFromCurrentLocation));
+      firestoreQuery.AddDistanceFilter((geoZipLocation || geoLocation), Number(distanceFromLocation));
     }
 
     return firestoreQuery;
 
-  }, [facilityType, traumaType, distanceFromCurrentLocation, isLocationAvailable, geoZipLocation, geoLocation]);
+  }, [facilityType, traumaType, distanceFromLocation, isLocationAvailable, geoZipLocation, geoLocation]);
 
   // Perform query
   const {
@@ -113,7 +127,7 @@ const AllFacilities = () => {
   } = useGeoFirestoreQuery(
     query,
     isLocationAvailable,
-    { facilityType, traumaType, distanceFromCurrentLocation, geoZipLocation, geoLocation }
+    { facilityType, traumaType, distanceFromLocation, geoZipLocation, geoLocation }
   );
 
   // Has facilities flag
@@ -128,12 +142,14 @@ const AllFacilities = () => {
       {/* Display location services banner */}
       <LocationProvider />
 
+      {/* Display start checklist call to action banner */}
+      <StartChecklistBanner />
+
       <Div paddingY="30px">
         <Form onSubmit={handleSubmit(onSubmit)} paddingBottom="20px" paddingLeft="10px">
           <Row>
-
             {/* Facilities Count */}
-            <Col md="4" display="flex" alignItems="flex-start" justifyContent="flex-start">
+            <Col md="4" display="flex" alignItems="center" justifyContent="flex-start">
               <Div display="flex" alignItems="center">
                 <Div fontSize="26px" paddingRight="10px">Facilities</Div>
                 <Text>({facilities?.length})</Text>
@@ -157,10 +173,13 @@ const AllFacilities = () => {
               </Controller>
 
             </Col>
+          </Row>
+
+          <Row>
             <Col col="3" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }}>
 
               {/* Distance search option */}
-              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading || !isLocationAvailable} defaultValue={"5"} small>
+              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading} defaultValue={"5"} small>
                 { distanceOptions.map((distanceValue) => <option key={distanceValue} value={distanceValue}>{ distanceValue }</option>) }
               </Controller>
 
@@ -172,11 +191,11 @@ const AllFacilities = () => {
                 control={control}
                 name="zip"
                 label="Zip Code"
-                // suffix={areLocationServicesEnabled && <Link onClick={() => {}}>Use Current Location</Link>}
                 placeholder="Enter Zip Code"
                 invalid={!!errors?.zip}
                 errorMessage={errors?.zip?.message}
                 disabled={isLoading}
+                defaultValue={zip} // TODO: WHY WONT THIS WORK?!? Try '10016' and that works.. console.log has the value available..
                 small />
             </Col>
 
