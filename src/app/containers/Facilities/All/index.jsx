@@ -160,7 +160,7 @@ const AllFacilities = () => {
             <Col col="3" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }}>
 
               {/* Distance search option */}
-              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading || !isLocationAvailable} defaultValue={"5"} small>
+              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading} defaultValue={"5"} small>
                 { distanceOptions.map((distanceValue) => <option key={distanceValue} value={distanceValue}>{ distanceValue }</option>) }
               </Controller>
 
