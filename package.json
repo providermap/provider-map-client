@@ -44,7 +44,9 @@
     "styled-components": "5.1.0",
     "styled-groove": "1.0.2",
     "usa-states": "0.0.5",
-    "utility-types": "3.10.0"
+    "utility-types": "3.10.0",
+    "yup": "0.28.4",
+    "zipcodes": "8.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

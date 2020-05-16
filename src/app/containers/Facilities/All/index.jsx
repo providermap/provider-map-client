@@ -1,13 +1,19 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
+import { firestore } from "firebase/app";
+import zipcodes from "zipcodes";
+import * as yup from "yup";
 
 // UI-Kit
 import Text from "@airbnb/lunar/lib/components/Text";
 import AppLoader from "@airbnb/lunar/lib/components/AppLoader";
 import AdaptiveGrid from "@airbnb/lunar/lib/components/AdaptiveGrid";
 import Select from "@airbnb/lunar/lib/components/Select";
-import { Container, Div, Row, Col } from "ui-kit/components";
+import Input from "@airbnb/lunar/lib/components/Input";
+import Button from "@airbnb/lunar/lib/components/Button";
+// import Link from "@airbnb/lunar/lib/components/Link";
+import { Container, Div, Row, Col, Form } from "ui-kit/components";
 
 // Public components
 import LocationProvider from "containers/LocationProvider";
@@ -25,34 +31,61 @@ import { facilityTypes, traumaTypes, distanceOptions } from "containers/Faciliti
 import { facilitiesCollection } from "utils/collections";
 
 // Selectors
-import { getLocation, getGeoLocation, getAreLocationServicesEnabled } from "containers/LocationProvider/store/locationProviderSelectors";
+import { getGeoLocation } from "containers/LocationProvider/store/locationProviderSelectors";
 
 // Query Classes
 import { GeoFirestoreQuery } from "utils/QueryBuilder";
+
+// Facility search validation schema
+const ValidationSchema = yup.object().shape({
+  zip: yup.string().matches(/^[0-9]{5}$/, "Zip Code must be exactly 5 digits")
+});
 
 
 const AllFacilities = () => {
 
   // State values
-  const { latitude, longitude } = useSelector(getLocation);
+  const [ { zipLatitude, zipLongitude }, setZipCoordinates ] = useState({});
+  const geoZipLocation = useMemo(
+    () => (zipLatitude && zipLongitude) ? new firestore.GeoPoint(zipLatitude, zipLongitude) : null,
+    [zipLatitude, zipLongitude]
+  );
+  console.log("AllFacilities -> geoZipLocation", geoZipLocation)
+
+  // Store values
   const geoLocation = useSelector(getGeoLocation);
-  const areLocationServicesEnabled = useSelector(getAreLocationServicesEnabled);
 
   // Initialize useForm hook for control inputs and handleSubmit handler
-  const { control, watch } = useForm();
+  const { control, watch, handleSubmit, errors } = useForm({ validationSchema: ValidationSchema });
+
+  // Set zip code in state on form submit
+  const onSubmit = ({ zip }) => {
+    // Lookup zip code
+    const zipLocation = zipcodes.lookup(zip);
+
+    // Set zip latitude and longitude
+    setZipCoordinates({ zipLatitude: zipLocation?.latitude, zipLongitude: zipLocation?.longitude });
+  }
 
   // Watch facility type select dropdown value
   const facilityType = watch("facilityType") ?? null;
   const traumaType = watch("traumaType") ?? null;
   const distanceFromCurrentLocation = watch("distance") ?? null;
 
+  // Flag to determine if facilities are ready to load (location lat & long are available)
+  const isLocationAvailable = useMemo(
+    () => ((!!geoLocation || !!geoZipLocation) && !!distanceFromCurrentLocation),
+    [geoLocation, geoZipLocation, distanceFromCurrentLocation]
+  );
+  console.log("isLocationAvailable", isLocationAvailable)
+
   const query = useMemo(() => {
 
     // Build query based on filter values and user location
     let firestoreQuery;
 
-    // If location services are enabled, use a geo firestore query
-    if (areLocationServicesEnabled) {
+    // If location services are enabled or zip was submitted, use a geo firestore query
+    if (isLocationAvailable) {
       firestoreQuery = new GeoFirestoreQuery(facilitiesCollection);
 
       // Add applied filters to query
@@ -64,35 +97,30 @@ const AllFacilities = () => {
         firestoreQuery.AddFilter("trauma", "==", traumaType);
       }
 
-      if (areLocationServicesEnabled && distanceFromCurrentLocation) {
-        // Add distance filter if we are using a geo query
-        firestoreQuery.AddDistanceFilter(geoLocation, Number(distanceFromCurrentLocation));
-      }
+      // Add distance filter if we are using a geo query (filter by zip first, otherwise use geo from location services)
+      firestoreQuery.AddDistanceFilter((geoZipLocation || geoLocation), Number(distanceFromCurrentLocation));
     }
 
     return firestoreQuery;
 
-  }, [areLocationServicesEnabled, facilityType, traumaType, distanceFromCurrentLocation]);
-
-  // Check if facility data can be loaded with applied filters
-  const shouldLoadData = useMemo(() => !!(areLocationServicesEnabled && distanceFromCurrentLocation), [areLocationServicesEnabled, distanceFromCurrentLocation]);
+  }, [facilityType, traumaType, distanceFromCurrentLocation, isLocationAvailable, geoZipLocation, geoLocation]);
 
   // Perform query
-  const { items: facilities, isLoading, error } = useGeoFirestoreQuery(query, shouldLoadData, { facilityType, traumaType, distanceFromCurrentLocation, latitude, longitude });
+  const {
+    items: facilities,
+    isLoading,
+    error
+  } = useGeoFirestoreQuery(
+    query,
+    isLocationAvailable,
+    { facilityType, traumaType, distanceFromCurrentLocation, geoZipLocation, geoLocation }
+  );
 
   // Has facilities flag
   const hasFacilities = useMemo(() => (facilities?.length > 0), [facilities]);
 
   // Show loader flag
   const showLoader = useMemo(() => (isLoading || error), [isLoading, error]);
-
-  // Has location enabled or has typed zip code
-  const hasLocationFromBrowserOrZip = useMemo(() => {
-
-    // TODO: Include zip code logic
-    return areLocationServicesEnabled;
-
-  }, [areLocationServicesEnabled]);
 
   return (
     <Container paddingBottom="10px">
@@ -101,7 +129,7 @@ const AllFacilities = () => {
       <LocationProvider />
 
       <Div paddingY="30px">
-        <Div paddingBottom="20px" paddingLeft="10px">
+        <Form onSubmit={handleSubmit(onSubmit)} paddingBottom="20px" paddingLeft="10px">
           <Row>
 
             {/* Facilities Count */}
@@ -116,7 +144,7 @@ const AllFacilities = () => {
             <Col md="4" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }} _md={{ marginTop: "0px" }}>
 
               {/* Facility Type Select Input */}
-              <Controller as={Select} control={control} name="facilityType" label="Facility Type" disabled={isLoading || !hasLocationFromBrowserOrZip} small>
+              <Controller as={Select} control={control} name="facilityType" label="Facility Type" disabled={isLoading || !isLocationAvailable} small>
                 { facilityTypes.map((facilityType) => <option key={facilityType} value={facilityType}>{ facilityType }</option>) }
               </Controller>
 
@@ -124,21 +152,39 @@ const AllFacilities = () => {
             <Col md="4" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }} _md={{ marginTop: "0px" }}>
 
               {/* Trauma Type Select Input */}
-              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" disabled={isLoading || !hasLocationFromBrowserOrZip} small>
+              <Controller as={Select} control={control} name="traumaType" label="Trauma Type" disabled={isLoading || !isLocationAvailable} small>
                 { traumaTypes.map((traumaType) => <option key={traumaType} value={traumaType}>{ traumaType }</option>) }
               </Controller>
 
             </Col>
-            <Col _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }} _md={{ marginTop: "0px" }}>
+            <Col col="3" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }}>
 
               {/* Distance search option */}
-              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading || !hasLocationFromBrowserOrZip} defaultValue={"5"} small>
+              <Controller as={Select} control={control} name="distance" label="Distance (Miles)" disabled={isLoading || !isLocationAvailable} defaultValue={"5"} small>
                 { distanceOptions.map((distanceValue) => <option key={distanceValue} value={distanceValue}>{ distanceValue }</option>) }
               </Controller>
 
             </Col>
+
+            <Col col="6" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }}>
+              <Controller
+                as={Input}
+                control={control}
+                name="zip"
+                label="Zip Code"
+                // suffix={areLocationServicesEnabled && <Link onClick={() => {}}>Use Current Location</Link>}
+                placeholder="Enter Zip Code"
+                invalid={!!errors?.zip}
+                errorMessage={errors?.zip?.message}
+                disabled={isLoading}
+                small />
+            </Col>
+
+            <Col display="flex" alignItems="flex-end" justifyContent="flex-end" col="3" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }}>
+              <Button type="submit">Search</Button>
+            </Col>
           </Row>
-        </Div>
+        </Form>
 
         <Div paddingY="5px" />
 
@@ -152,14 +198,14 @@ const AllFacilities = () => {
           />
         }
 
-        { !hasLocationFromBrowserOrZip &&
+        { !isLocationAvailable &&
           <Div height="400px" display="flex" alignItems="center" justifyContent="center" paddingY="30px" textAlign="center">
             {/* Make this look better */}
             <Text bold>To search for nearby facilities, please input ZIP Code or enable browser location services.</Text>
           </Div>
         }
 
-        { hasLocationFromBrowserOrZip && !isLoading &&
+        { isLocationAvailable && !isLoading &&
           <>
             {/* Display null state for no facilities */}
             { !hasFacilities &&
