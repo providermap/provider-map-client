@@ -148,7 +148,6 @@ const AllFacilities = () => {
       <Div paddingY="30px">
         <Form onSubmit={handleSubmit(onSubmit)} paddingBottom="20px" paddingLeft="10px">
           <Row>
-
             {/* Facilities Count */}
             <Col md="4" display="flex" alignItems="center" justifyContent="flex-start">
               <Div display="flex" alignItems="center">
@@ -174,6 +173,9 @@ const AllFacilities = () => {
               </Controller>
 
             </Col>
+          </Row>
+
+          <Row>
             <Col col="3" _xs={{ marginTop: "8px" }} _sm={{ marginTop: "8px" }}>
 
               {/* Distance search option */}
@@ -189,12 +191,11 @@ const AllFacilities = () => {
                 control={control}
                 name="zip"
                 label="Zip Code"
-                // suffix={areLocationServicesEnabled && <Link onClick={() => {}}>Use Current Location</Link>}
                 placeholder="Enter Zip Code"
                 invalid={!!errors?.zip}
                 errorMessage={errors?.zip?.message}
                 disabled={isLoading}
-                defaultValue={zip}
+                defaultValue={zip} // TODO: WHY WONT THIS WORK?!? Try '10016' and that works.. console.log has the value available..
                 small />
             </Col>
 

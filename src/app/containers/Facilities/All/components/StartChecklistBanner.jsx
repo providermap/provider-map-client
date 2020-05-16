@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 
-// UI
+// UI-Kit
 import Card from "@airbnb/lunar/lib/components/Card";
 import Button from "@airbnb/lunar/lib/components/Button";
 import { Div } from "ui-kit/components";
