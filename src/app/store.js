@@ -1,15 +1,13 @@
-import React from "react";
 import createSagaMiddleware from "redux-saga";
 import { createBrowserHistory } from "history";
-import { routerMiddleware, ConnectedRouter } from "connected-react-router";
-import { Provider } from "react-redux";
+import { routerMiddleware } from "connected-react-router";
 import { applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { batchDispatchMiddleware } from "redux-batched-actions";
 
 // Root reducer & saga
-import rootReducer from "reducer";
-import rootSaga from "sagas";
+import rootReducer from "./reducer";
+import rootSaga from "./sagas";
 
 
 // Create a history of your choosing (we"re using a browser history in this case)
@@ -39,7 +37,7 @@ const configureStore = () => {
   const store = createStore(rootReducer(history), storeEnhancers);
 
   if (process.env.NODE_ENV !== "production" && module.hot) {
-    module.hot.accept("reducer", () => {
+    module.hot.accept("./reducer", () => {
       console.log("Enabling Webpack HMR for reducers");
       store.replaceReducer(rootReducer(history));
     });
@@ -50,14 +48,4 @@ const configureStore = () => {
   return store;
 }
 
-const store = configureStore();
-
-const Store = ({ children }) => (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      { children }
-    </ConnectedRouter>
-  </Provider>
-);
-
-export default Store;
+export default configureStore;
