@@ -7,8 +7,6 @@ const commonWebpackConfig = require("./webpack.common.js");
 
 console.log("Running webpack.dev.js");
 
-console.log("process.env.FIREBASE_APP_ID,", process.env.FIREBASE_APP_ID,)
-
 
 module.exports = merge(commonWebpackConfig, {
   mode: "development",
