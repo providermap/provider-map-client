@@ -2,6 +2,9 @@
 import firebase from "firebase/app";
 import "firebase/analytics";
 import "firebase/firestore";
+import ReduxSagaFirebase from "redux-saga-firebase";
+import { GeoFirestore } from "geofirestore";
+
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -15,10 +18,16 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
-// Get a reference to the database service
+// Create a Firestore reference
 const db = firebase.firestore();
 
-export { db };
+// Create ReduxSagaFirebase reference
+const rsf = new ReduxSagaFirebase(firebaseApp);
+
+// Create a GeoFirestore reference
+const geofirestore = new GeoFirestore(db);
+
+export { db, rsf, geofirestore };

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 import { ThemeProvider } from "styled-components";
 import applyGroove from "styled-groove";
 
 // Themes
-import colors from "./colors";
-import text from "./text";
+import colors from "ui-kit/theme/colors";
+import text from "ui-kit/theme/text";
 
 // Custom application theme
 const theme = {
@@ -19,4 +19,4 @@ const Theme = ({ children }) => (
   </ThemeProvider>
 );
 
-export default Theme;
+export default memo(Theme);

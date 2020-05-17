@@ -1,4 +1,5 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -12,12 +13,24 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    match /facilities_dev/{devFacility} {
-      allow read, write: if false;
+    match /prod_facilities/{facility} {
+      allow read: if true;
+      allow write: if false;
     }
 
-    match /facilities_test/{testFacility} {
-      allow read, write: if false;
+    match /prod_facilities_submission/{submittedFacility} {
+      allow get, list, create: if true;
+      allow update, delete: if false;
+    }
+
+    match /dev_facilities/{devFacility} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /dev_facilities_submission/{submittedFacility} {
+      allow get, list, create: if true;
+      allow update, delete: if false;
     }
 
   }

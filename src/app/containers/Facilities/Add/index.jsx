@@ -11,10 +11,11 @@ import Toast from "@airbnb/lunar/lib/components/Toast";
 import CheckboxController from "@airbnb/lunar/lib/components/CheckBoxController";
 import RadioButtonController from "@airbnb/lunar/lib/components/RadioButtonController";
 import Select from "@airbnb/lunar/lib/components/Select";
-import { Container, Form, Row, Col, Div } from "../../../ui-kit/components";
+import { Container, Form, Row, Col, Div } from "ui-kit/components";
 
-// Firestore DB
-import { db } from "../../../../firebase";
+// Utils
+import { db } from "utils/firebase";
+import { envPrefix } from "utils/environment";
 
 
 // Styled component
@@ -98,7 +99,7 @@ const AddFacility = () => {
       };
 
       // Add facility document to collection
-      await db.collection("facilities_submission").add(document);
+      await db.collection(`${envPrefix}_facilities_submission`).add(document);
 
       // Display success toast if submission is successful
       setToastWithResetTimeout({
@@ -258,7 +259,7 @@ const AddFacility = () => {
 
 
                 <Col>
-                  <Div  marginY="20px">
+                  <Div marginY="20px">
                     <Button type="submit">Submit</Button>
                   </Div>
                 </Col>

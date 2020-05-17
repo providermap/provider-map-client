@@ -41,6 +41,7 @@ module.exports = merge(commonWebpackConfig, {
     new MiniCssExtractPlugin({ filename: "[name].[hash].css", chunkFilename: "[id].[hash].css" }),
     new HtmlWebpackPlugin({
       template: "./index.html",
+      favicon: "./src/app/assets/img/favicon.svg",
       minify: {
         minifyJS: true,
         minifyCSS: true,
