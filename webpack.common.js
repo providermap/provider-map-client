@@ -17,6 +17,7 @@ module.exports = {
   plugins: [
     // Remove your build folder before building
     new CleanWebpackPlugin(),
+
     // Define env variables in code
     new webpack.DefinePlugin({
       "process.env.FIREBASE_API_KEY": JSON.stringify(process.env.FIREBASE_API_KEY),
@@ -28,6 +29,7 @@ module.exports = {
       "process.env.FIREBASE_APP_ID": JSON.stringify(process.env.FIREBASE_APP_ID),
       "process.env.FIREBASE_MEASUREMENT_ID": JSON.stringify(process.env.FIREBASE_MEASUREMENT_ID),
     }),
+
     // Add index.html template and favicon
     new HtmlWebpackPlugin({ template: "./index.html", favicon: "./src/app/assets/img/favicon.svg" }),
   ],

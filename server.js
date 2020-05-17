@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // Serve static react site
 app.get("*", (_req, res) => void res.sendFile(path.join(__dirname, "./public", "index.html")));
 
-// Serve that ish
+// Get port
 const port = process.env.PORT || 80;
 
 app.listen(port);
