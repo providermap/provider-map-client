@@ -22,14 +22,15 @@
     "date-fns": "2.12.0",
     "express": "4.17.1",
     "firebase": "7.14.0",
-    "geofirestore": "^3.4.1",
+    "geofirestore": "3.4.1",
     "hogan-express": "0.5.2",
+    "jspdf": "^1.5.3",
     "lodash": "4.17.15",
     "md5": "2.2.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-firebase-hooks": "2.1.1",
-    "react-hook-form": "5.4.2",
+    "react-hook-form": "5.7.2",
     "react-hot-loader": "4.12.20",
     "react-redux": "7.2.0",
     "react-router-dom": "5.1.2",
@@ -45,7 +46,7 @@
     "styled-groove": "1.0.2",
     "usa-states": "0.0.5",
     "utility-types": "3.10.0",
-    "yup": "0.28.4",
+    "yup": "0.28.5",
     "zipcodes": "8.0.0"
   },
   "devDependencies": {
@@ -86,7 +87,7 @@
     "terser-webpack-plugin": "2.3.5",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11",
-    "webpack-dev-server": "3.10.3",
+    "webpack-dev-server": "^3.11.0",
     "webpack-merge": "4.2.2"
   }
 }

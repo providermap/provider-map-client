@@ -1,4 +1,6 @@
 import React from "react";
+import { Provider } from "react-redux";
+import { ConnectedRouter } from "connected-react-router";
 
 // Theme provider
 import Theme from "ui-kit/theme";
@@ -9,18 +11,21 @@ import ErrorBoundary from "containers/ErrorBoundary";
 import Main from "containers/Main";
 
 // Store configurations
-import Store from "store";
+import configureStore, { history } from "./store";
+const store = configureStore();
 
 
 const App = () => (
-  <Store>
-    <ErrorBoundary>
-      <GlobalStyles />
-      <Theme>
-        <Main />
-      </Theme>
-    </ErrorBoundary>
-  </Store>
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <ErrorBoundary>
+        <GlobalStyles />
+        <Theme>
+          <Main />
+        </Theme>
+      </ErrorBoundary>
+    </ConnectedRouter>
+  </Provider>
 );
 
 export default App;
