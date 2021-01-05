@@ -15,7 +15,7 @@
     "@airbnb/lunar": "3.6.3",
     "@airbnb/lunar-icons": "3.1.1",
     "@airbnb/lunar-layouts": "3.0.2",
-    "axios": "0.19.2",
+    "axios": "0.21.1",
     "body-parser": "1.19.0",
     "connected-react-router": "6.8.0",
     "cross-env": "7.0.2",
