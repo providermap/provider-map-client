@@ -25,7 +25,7 @@
     "geofirestore": "3.4.1",
     "hogan-express": "0.5.2",
     "jspdf": "^1.5.3",
-    "lodash": "4.17.15",
+    "lodash": "4.17.21",
     "md5": "2.2.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
